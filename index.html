@@ -274,7 +274,7 @@ svg text{font-family:'DM Mono',monospace;}
         </div>
         <div id="scanner-result" class="hidden"></div>
         <div style="display:flex;gap:8px">
-          <button class="btn" id="scan-btn" onclick="toggleScanner()">📷 Start Scanner</button>
+          <button class="btn" id="scan-btn" onclick="toggleScanner()">📷 Scan / Enter Barcode</button>
           <button class="btn btn-ghost hidden" id="scan-stop-btn" onclick="stopScanner()" style="flex:0 0 auto;width:auto;padding:11px 16px">Stop</button>
         </div>
       </div>
@@ -1049,39 +1049,70 @@ async function logAIFood(){
   const t=_aiResult.totals;const p=_aiPortion;
   const meal=document.getElementById("food-meal-ai").value;
   const desc=_aiDesc+(p!==1?` (${p}x)`:"");
-  await api.insert("food_logs",{date:today(),meal,description:desc,calories:Math.round(t.calories*p),protein:Math.round(t.protein*p),carbs:Math.round(t.carbs*p),fat:Math.round(t.fat*p),sodium:Math.round(t.sodium*p),logged_at:nowISO()});
-  await saveToRecent(_aiDesc.substring(0,60),{calories:Math.round(t.calories*p),protein:Math.round(t.protein*p),carbs:Math.round(t.carbs*p),fat:Math.round(t.fat*p),sodium:Math.round(t.sodium*p)});
-  document.getElementById("food-desc").value="";document.getElementById("food-result").classList.add("hidden");
-  _aiResult=null;_aiPortion=1;_aiDesc="";
-  await loadAll();
+  // Show saving state
+  const saveBtn=document.querySelector("#food-result .btn-green");
+  if(saveBtn){saveBtn.innerHTML=spinner();saveBtn.disabled=true;}
+  try{
+    await api.insert("food_logs",{date:today(),meal,description:desc,calories:Math.round(t.calories*p),protein:Math.round(t.protein*p),carbs:Math.round(t.carbs*p),fat:Math.round(t.fat*p),sodium:Math.round(t.sodium*p),logged_at:nowISO()});
+    await saveToRecent(_aiDesc.substring(0,60),{calories:Math.round(t.calories*p),protein:Math.round(t.protein*p),carbs:Math.round(t.carbs*p),fat:Math.round(t.fat*p),sodium:Math.round(t.sodium*p)});
+    document.getElementById("food-desc").value="";
+    document.getElementById("food-result").innerHTML=`<div style="color:var(--green);font-size:13px;padding:10px;background:#0d1f0d;border-radius:8px;border:1px solid #22c55e44">✓ Saved to log</div>`;
+    _aiResult=null;_aiPortion=1;_aiDesc="";
+    setTimeout(()=>{document.getElementById("food-result").classList.add("hidden");},1500);
+    await loadAll();
+  }catch(e){
+    if(saveBtn){saveBtn.textContent="Save to Log";saveBtn.disabled=false;}
+    document.getElementById("food-result").innerHTML+=`<div style="color:var(--red);font-size:11px;margin-top:8px">Save failed — try again</div>`;
+  }
 }
 
 // ── BARCODE SCANNER ───────────────────────────────────────────
 async function toggleScanner(){
   if(S.scannerActive){stopScanner();return;}
-  try{
-    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
-    S.scannerStream=stream;S.scannerActive=true;
-    const video=document.getElementById("scanner-video");
-    video.srcObject=stream;
-    document.getElementById("scanner-wrap").classList.remove("hidden");
-    document.getElementById("scan-btn").textContent="📷 Scanning...";
-    document.getElementById("scan-stop-btn").classList.remove("hidden");
-    if("BarcodeDetector" in window){
+  // Check if BarcodeDetector is available (Chrome Android)
+  if("BarcodeDetector" in window){
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+      S.scannerStream=stream;S.scannerActive=true;
+      const video=document.getElementById("scanner-video");
+      video.srcObject=stream;
+      document.getElementById("scanner-wrap").classList.remove("hidden");
+      document.getElementById("scan-btn").textContent="📷 Scanning...";
+      document.getElementById("scan-stop-btn").classList.remove("hidden");
       const detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128","code_39"]});
       S.scannerInterval=setInterval(async()=>{
         try{const barcodes=await detector.detect(video);if(barcodes.length>0){stopScanner();await lookupBarcode(barcodes[0].rawValue);}}catch(e){}
       },600);
-    }else{
+    }catch(e){
       stopScanner();
-      const code=prompt("Camera barcode detection not supported.\nEnter barcode number manually:");
-      if(code&&code.trim())await lookupBarcode(code.trim());
+      showManualBarcodeEntry();
     }
-  }catch(e){
-    stopScanner();
-    document.getElementById("scanner-result").innerHTML=`<div style="color:var(--orange);font-size:12px;padding:8px 0">Camera access denied — allow camera access and try again.</div>`;
-    document.getElementById("scanner-result").classList.remove("hidden");
+  }else{
+    // iPhone Safari — show clean manual entry UI
+    showManualBarcodeEntry();
   }
+}
+
+function showManualBarcodeEntry(){
+  const rd=document.getElementById("scanner-result");
+  rd.innerHTML=`
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:8px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">
+        📱 On iPhone, camera scanning isn't supported in Safari.<br>
+        Enter the barcode number from the product label:
+      </div>
+      <input type="number" id="manual-barcode-input" placeholder="e.g. 049000042566" style="margin-bottom:10px">
+      <button class="btn" onclick="submitManualBarcode()">Look Up Product</button>
+    </div>`;
+  rd.classList.remove("hidden");
+}
+
+async function submitManualBarcode(){
+  const input=document.getElementById("manual-barcode-input");
+  if(!input||!input.value.trim())return;
+  const code=input.value.trim();
+  document.getElementById("scanner-result").innerHTML=`<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:8px 0">${spinner()} Looking up ${code}...</div>`;
+  await lookupBarcode(code);
 }
 
 function stopScanner(){
