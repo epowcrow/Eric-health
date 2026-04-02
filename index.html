@@ -1086,83 +1086,67 @@ async function toggleScanner(){
   rd.innerHTML=`<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:8px 0">${spinner()} Loading scanner...</div>`;
   rd.classList.remove("hidden");
 
-  // Load ZXing if not already loaded
+  // Load ZXing
   if(!window.ZXing){
     try{
       await new Promise((resolve,reject)=>{
         const script=document.createElement("script");
         script.src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js";
-        script.onload=resolve;
-        script.onerror=reject;
+        script.onload=resolve;script.onerror=reject;
         document.head.appendChild(script);
       });
     }catch(e){
-      rd.innerHTML=`<div style="color:var(--orange);font-size:12px;padding:8px 0">Could not load scanner library — check your connection.</div>`;
-      return;
+      rd.innerHTML=`<div style="color:var(--orange);font-size:12px;padding:8px 0">Could not load scanner — check connection.</div>`;
+      showManualBarcodeEntry();return;
     }
   }
 
   try{
-    // First test camera access directly
-    const stream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}}
-    });
-    // Got stream — hand it to ZXing
-    S.scannerStream=stream;
-    S.scannerActive=true;
     const video=document.getElementById("scanner-video");
-    video.srcObject=stream;
     video.setAttribute("playsinline","true");
-    wrap.classList.remove("hidden");
-    scanBtn.textContent="⏹ Stop Scanner";
-    stopBtn.classList.remove("hidden");
-    rd.innerHTML=`<div style="font-size:11px;color:var(--muted);padding:6px 0">📷 Point camera at barcode...</div>`;
+    video.setAttribute("muted","true");
 
     _zxingReader=new ZXing.BrowserMultiFormatReader();
 
-    // Use the stream we already have
-    const hints=new Map();
-    hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS,[
-      ZXing.BarcodeFormat.EAN_13,ZXing.BarcodeFormat.EAN_8,
-      ZXing.BarcodeFormat.UPC_A,ZXing.BarcodeFormat.UPC_E,
-      ZXing.BarcodeFormat.CODE_128,ZXing.BarcodeFormat.CODE_39,
-    ]);
-    _zxingReader.hints=hints;
+    // Get device list to find back camera
+    const devices=await _zxingReader.listVideoInputDevices();
+    const backCam=devices.find(d=>
+      /back|rear|environment/i.test(d.label)
+    )||devices[devices.length-1]||devices[0];
 
-    // Poll frames for barcode
-    const canvas=document.createElement("canvas");
-    S.scannerInterval=setInterval(async()=>{
-      if(!video.videoWidth)return;
-      canvas.width=video.videoWidth;
-      canvas.height=video.videoHeight;
-      canvas.getContext("2d").drawImage(video,0,0);
-      try{
-        const result=await _zxingReader.decodeFromCanvas(canvas);
+    wrap.classList.remove("hidden");
+    scanBtn.textContent="⏹ Stop Scanner";
+    stopBtn.classList.remove("hidden");
+    S.scannerActive=true;
+    rd.innerHTML=`<div style="font-size:11px;color:var(--muted);padding:6px 0">📷 Point camera at barcode and hold steady...</div>`;
+
+    // Use ZXing's built-in video device decoder — handles everything
+    await _zxingReader.decodeFromVideoDevice(
+      backCam?.deviceId||null,
+      video,
+      async(result,err)=>{
         if(result){
           const code=result.getText();
           stopScanner();
           await lookupBarcode(code);
         }
-      }catch(e){
-        // No barcode found this frame — keep trying
+        // err just means no barcode found this frame — ignore
       }
-    },500);
+    );
 
   }catch(e){
     stopScanner();
     const msg=e?.name==="NotAllowedError"
-      ?"Camera permission denied — go to iPhone Settings → Safari → Camera → Allow"
-      :e?.name==="NotFoundError"
-      ?"No camera found on this device"
-      :`Camera error: ${e?.message||"unknown"}. Try manual entry below.`;
+      ?"Camera permission denied — go to iPhone Settings → Privacy → Camera → Safari → Allow"
+      :`Scanner error: ${e?.message||e}`;
     rd.innerHTML=`<div style="color:var(--orange);font-size:12px;padding:8px 0;line-height:1.6">${msg}</div>`;
     showManualBarcodeEntry();
   }
 }
 
 function stopScanner(){
-  if(S.scannerInterval){clearInterval(S.scannerInterval);S.scannerInterval=null;}
   if(_zxingReader){try{_zxingReader.reset();}catch(e){} _zxingReader=null;}
+  if(S.scannerInterval){clearInterval(S.scannerInterval);S.scannerInterval=null;}
   if(S.scannerStream){S.scannerStream.getTracks().forEach(t=>t.stop());S.scannerStream=null;}
   S.scannerActive=false;
   document.getElementById("scanner-wrap").classList.add("hidden");
@@ -1172,13 +1156,13 @@ function stopScanner(){
 
 function showManualBarcodeEntry(){
   const rd=document.getElementById("scanner-result");
-  const existing=document.getElementById("manual-barcode-input");
-  if(existing)return; // Already showing
-  rd.innerHTML+=`<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:8px">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Or enter barcode number manually:</div>
-    <input type="number" id="manual-barcode-input" placeholder="e.g. 049000042566" style="margin-bottom:10px">
-    <button class="btn" onclick="submitManualBarcode()">Look Up Product</button>
-  </div>`;
+  if(document.getElementById("manual-barcode-input"))return;
+  rd.innerHTML+=`
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:8px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Or enter barcode number manually:</div>
+      <input type="number" id="manual-barcode-input" placeholder="e.g. 049000042566" style="margin-bottom:10px">
+      <button class="btn" onclick="submitManualBarcode()">Look Up Product</button>
+    </div>`;
   rd.classList.remove("hidden");
 }
 
