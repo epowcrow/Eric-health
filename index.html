@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,65 +10,80 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#07080f;--surface:#0d0f1c;--border:#151929;--text:#c8cfe8;
-    --muted:#4a5270;--accent:#4f72ff;--green:#22c55e;--yellow:#eab308;
-    --orange:#f97316;--red:#ef4444;--cal:#f59e0b;--protein:#4f72ff;
-    --carbs:#a855f7;--fat:#ec4899;--sodium:#06b6d4;--water:#38bdf8;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{background:var(--bg);color:var(--text);font-family:'DM Mono','Courier New',monospace;min-height:100vh;min-height:-webkit-fill-available;padding-bottom:env(safe-area-inset-bottom,20px);padding-top:env(safe-area-inset-top,0px);}
-  input,select,textarea{background:#10131f;border:1px solid var(--border);color:var(--text);border-radius:7px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:14px;width:100%;outline:none;-webkit-appearance:none;appearance:none;}
-  input::placeholder,textarea::placeholder{color:#252b45;}
-  textarea{resize:none;}
-  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5270' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-  button{font-family:'DM Mono',monospace;cursor:pointer;border:none;}
-  .btn{background:var(--accent);color:#fff;border-radius:7px;padding:11px 16px;font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;width:100%;transition:opacity 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .btn:active{opacity:0.75;}
-  .btn-ghost{background:#1a2040;}
-  .btn-green{background:var(--green);}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
-  .lbl{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-  .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
-  .bar-track{height:3px;background:#1a1f35;border-radius:2px;margin-top:5px;}
-  .bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease;}
-  .big-num{font-family:Georgia,serif;font-weight:700;line-height:1;}
-  .tag{display:inline-block;border-radius:4px;padding:2px 8px;font-size:10px;letter-spacing:0.06em;}
-  .log-entry{border-left:2px solid var(--border);padding-left:10px;margin-bottom:10px;font-size:12px;}
-  .spinner{width:16px;height:16px;border:2px solid #1e2a4a;border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;flex-shrink:0;}
-  .fade-in{animation:fadeIn 0.3s ease;}
-  .field{margin-bottom:10px;}
-  .hidden{display:none;}
-  #header{padding:16px 18px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
-  #tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
-  #tabs::-webkit-scrollbar{display:none;}
-  .tab-btn{flex:0 0 auto;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:10px 12px;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
-  .tab-btn.active{color:#8fa8ff;border-bottom-color:var(--accent);}
-  #body{padding:16px 18px;}
-  .panel{display:none;}
-  .panel.active{display:block;}
-  .water-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:10px 0;}
-  .water-bubble{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--water);background:transparent;cursor:pointer;transition:all 0.2s;}
-  .water-bubble.filled{background:var(--water);}
-  .chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  svg text{font-family:'DM Mono',monospace;}
-  .streak-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
-  .week-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;}
-  .week-row:last-child{border:none;}
-  .sodium-item{padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;}
-  .sodium-item:active{background:var(--border);}
-  .history-day{margin-bottom:16px;}
-  .history-day-hdr{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
-  /* Morning quick-log cards */
-  .qlog-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;}
-  .qlog-card.done{border-color:#22c55e44;opacity:0.7;}
-  .qlog-title{font-size:13px;color:#e8ecff;font-weight:500;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
-  .qlog-check{font-size:16px;}
-  .ts{font-size:9px;color:var(--muted);letter-spacing:0.08em;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+:root{
+  --bg:#07080f;--surface:#0d0f1c;--border:#151929;--text:#c8cfe8;
+  --muted:#4a5270;--accent:#4f72ff;--green:#22c55e;--yellow:#eab308;
+  --orange:#f97316;--red:#ef4444;--cal:#f59e0b;--protein:#4f72ff;
+  --carbs:#a855f7;--fat:#ec4899;--sodium:#06b6d4;--water:#38bdf8;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono','Courier New',monospace;min-height:100vh;min-height:-webkit-fill-available;padding-bottom:env(safe-area-inset-bottom,24px);padding-top:env(safe-area-inset-top,0px);}
+input,select,textarea{background:#10131f;border:1px solid var(--border);color:var(--text);border-radius:7px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:14px;width:100%;outline:none;-webkit-appearance:none;appearance:none;}
+input::placeholder,textarea::placeholder{color:#252b45;}
+textarea{resize:none;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5270' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+button{font-family:'DM Mono',monospace;cursor:pointer;border:none;}
+.btn{background:var(--accent);color:#fff;border-radius:7px;padding:11px 16px;font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;width:100%;transition:opacity 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn:active{opacity:0.75;}
+.btn-ghost{background:#1a2040;}
+.btn-green{background:var(--green);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
+.lbl{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.bar-track{height:3px;background:#1a1f35;border-radius:2px;margin-top:5px;}
+.bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease;}
+.big-num{font-family:Georgia,serif;font-weight:700;line-height:1;}
+.tag{display:inline-block;border-radius:4px;padding:2px 8px;font-size:10px;letter-spacing:0.06em;}
+.log-entry{border-left:2px solid var(--border);padding-left:10px;margin-bottom:10px;font-size:12px;}
+.spinner{width:16px;height:16px;border:2px solid #1e2a4a;border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;flex-shrink:0;}
+.fade-in{animation:fadeIn 0.3s ease;}
+.field{margin-bottom:10px;}
+.hidden{display:none;}
+#header{padding:16px 18px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
+#tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+#tabs::-webkit-scrollbar{display:none;}
+.tab-btn{flex:0 0 auto;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:10px 12px;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.tab-btn.active{color:#8fa8ff;border-bottom-color:var(--accent);}
+#body{padding:16px 18px;}
+.panel{display:none;}
+.panel.active{display:block;}
+.water-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:10px 0;}
+.water-bubble{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--water);background:transparent;cursor:pointer;transition:all 0.2s;}
+.water-bubble.filled{background:var(--water);}
+.chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+svg text{font-family:'DM Mono',monospace;}
+.streak-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.week-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;gap:6px;}
+.week-row:last-child{border:none;}
+.qlog-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;}
+.qlog-card.done{border-color:#22c55e44;opacity:0.75;}
+.qlog-title{font-size:13px;color:#e8ecff;font-weight:500;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.ts{font-size:9px;color:var(--muted);letter-spacing:0.06em;}
+/* Food DB search */
+.food-suggestion{padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:12px;}
+.food-suggestion:active{background:var(--border);}
+/* Portion stepper */
+.portion-stepper{display:flex;align-items:center;gap:12px;margin:10px 0;}
+.portion-btn{width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.portion-val{font-size:18px;font-weight:600;min-width:40px;text-align:center;}
+/* Barcode */
+#scanner-wrap{position:relative;width:100%;border-radius:8px;overflow:hidden;background:#000;margin-bottom:10px;max-height:200px;}
+#scanner-video{width:100%;display:block;max-height:200px;object-fit:cover;}
+#scanner-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:160px;height:160px;border:2px solid var(--accent);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.55);}
+#scanner-line{position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0.8;animation:scan 1.8s ease-in-out infinite;}
+/* Insight */
+.insight-card{background:linear-gradient(135deg,#0d1530,#0d0f1c);border:1px solid #1e2a4a;border-radius:10px;padding:14px;margin-bottom:10px;font-size:12px;line-height:1.6;}
+/* Guide */
+.guide-item{display:flex;gap:10px;margin-bottom:10px;font-size:12px;line-height:1.6;color:var(--muted);}
+.guide-icon{flex-shrink:0;font-size:14px;}
+/* Recent foods */
+.recent-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;cursor:pointer;}
+.recent-item:active{opacity:0.7;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scan{0%{top:0;}50%{top:calc(100% - 2px);}100%{top:0;}}
 </style>
 </head>
 <body>
@@ -87,6 +101,8 @@
     <button class="tab-btn" onclick="showTab('sodium')">🧂 Sodium</button>
     <button class="tab-btn" onclick="showTab('history')">📋 History</button>
     <button class="tab-btn" onclick="showTab('week')">📊 Week</button>
+    <button class="tab-btn" onclick="showTab('export')">📤 Export</button>
+    <button class="tab-btn" onclick="showTab('guide')">📖 Guide</button>
     <button class="tab-btn" onclick="showTab('goals')">⚙ Goals</button>
   </div>
 </div>
@@ -98,59 +114,63 @@
     <div style="color:var(--muted);font-size:11px;letter-spacing:0.1em">LOADING...</div>
   </div>
 
-  <!-- MORNING — all cards independent, any order -->
-
+  <!-- MORNING -->
   <div id="panel-morning" class="panel">
     <div class="card" style="text-align:center;padding:18px 16px;border-color:#4f72ff44;margin-bottom:12px">
       <div style="font-size:11px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2px">Good Morning</div>
       <div style="font-size:20px;font-weight:700;color:#e8ecff;font-family:Georgia,serif" id="morning-date"></div>
       <div style="font-size:10px;color:var(--muted);margin-top:4px">Log anything — in any order</div>
     </div>
-
-```
-<!-- BP -->
-<div class="qlog-card" id="qlog-bp">
-  <div class="qlog-title">❤️ Blood Pressure <span class="qlog-check hidden" id="qlog-bp-check">✓</span></div>
-  <div id="qlog-bp-form">
-    <div style="display:flex;gap:10px;margin-bottom:10px">
-      <div style="flex:1"><span class="lbl">Systolic</span><input type="number" id="m-sys" placeholder="120"></div>
-      <div style="flex:1"><span class="lbl">Diastolic</span><input type="number" id="m-dia" placeholder="80"></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn btn-ghost" style="flex:1;font-size:11px" onclick="quickAddWater()">💧 +Water</button>
+      <button class="btn" id="quick-meds-btn" style="flex:1;font-size:11px" onclick="showTab('morning')">💊 Meds</button>
     </div>
-    <input type="text" id="m-bp-notes" placeholder="Notes (optional)" style="margin-bottom:10px">
-    <button class="btn" onclick="morningLogBP()"><span id="m-bp-btn">Log BP</span></button>
+    <div class="qlog-card" id="qlog-bp">
+      <div class="qlog-title">❤️ Blood Pressure <span id="qlog-bp-check" class="hidden" style="color:var(--green)">✓</span></div>
+      <div id="qlog-bp-form">
+        <div style="display:flex;gap:10px;margin-bottom:10px">
+          <div style="flex:1"><span class="lbl">Systolic</span><input type="number" id="m-sys" placeholder="120"></div>
+          <div style="flex:1"><span class="lbl">Diastolic</span><input type="number" id="m-dia" placeholder="80"></div>
+        </div>
+        <input type="text" id="m-bp-notes" placeholder="Notes (optional)" style="margin-bottom:10px">
+        <button class="btn" onclick="morningLogBP()"><span id="m-bp-btn">Log BP</span></button>
+      </div>
+      <div id="qlog-bp-result" class="hidden" style="margin-top:6px"></div>
+      <div id="today-bp-avg" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)"></div>
+    </div>
+    <div class="qlog-card" id="qlog-meds">
+      <div class="qlog-title">💊 Losartan <span id="streak-badge" style="font-size:10px;color:var(--green)"></span></div>
+      <div id="qlog-meds-form">
+        <span class="lbl">How many pills?</span>
+        <div class="portion-stepper" style="margin-bottom:12px">
+          <div class="portion-btn" onclick="changePillCount(-1)">−</div>
+          <div class="portion-val" id="pill-count-val">1</div>
+          <div class="portion-btn" onclick="changePillCount(1)">+</div>
+          <div style="font-size:11px;color:var(--muted)">pill(s)</div>
+        </div>
+        <button class="btn" id="meds-btn" onclick="morningLogMeds()">Log Losartan</button>
+      </div>
+      <div id="qlog-meds-result" class="hidden" style="margin-top:8px;font-size:12px;color:var(--green)"></div>
+      <button class="btn btn-ghost" id="meds-undo-btn" onclick="morningUndoMeds()" style="margin-top:8px;font-size:10px;display:none">Undo</button>
+    </div>
+    <div class="qlog-card" id="qlog-weight">
+      <div class="qlog-title">⚖️ Weight <span id="last-weight-badge" style="font-size:10px;color:var(--muted)"></span></div>
+      <div style="display:flex;gap:8px">
+        <input type="number" id="m-weight" placeholder="230" step="0.1">
+        <button class="btn" style="flex:0 0 auto;width:auto;padding:11px 18px" onclick="morningLogWeight()"><span id="m-wt-btn">Log</span></button>
+      </div>
+      <div id="qlog-weight-result" class="hidden" style="margin-top:8px;font-size:12px;color:var(--green)"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-ghost" onclick="showTab('food')">🥗 Log Food</button>
+      <button class="btn btn-ghost" onclick="showTab('workout')">🚴 Log Workout</button>
+    </div>
   </div>
-  <div id="qlog-bp-result" class="hidden" style="margin-top:4px"></div>
-</div>
 
-<!-- Meds -->
-<div class="qlog-card" id="qlog-meds">
-  <div class="qlog-title">💊 Losartan <span id="streak-badge" style="font-size:10px;color:var(--green)"></span></div>
-  <button class="btn" id="meds-btn" onclick="morningToggleMeds()">Mark as Taken</button>
-  <div id="qlog-meds-result" class="hidden" style="margin-top:8px;font-size:12px;color:var(--green)"></div>
-</div>
-
-<!-- Weight -->
-<div class="qlog-card" id="qlog-weight">
-  <div class="qlog-title">⚖️ Weight <span id="last-weight-badge" style="font-size:10px;color:var(--muted)"></span></div>
-  <div style="display:flex;gap:8px">
-    <input type="number" id="m-weight" placeholder="230" step="0.1">
-    <button class="btn" style="flex:0 0 auto;width:auto;padding:11px 18px" onclick="morningLogWeight()"><span id="m-wt-btn">Log</span></button>
-  </div>
-  <div id="qlog-weight-result" class="hidden" style="margin-top:8px;font-size:12px;color:var(--green)"></div>
-</div>
-
-<div style="display:flex;gap:8px;margin-top:4px">
-  <button class="btn btn-ghost" onclick="showTab('food')">🥗 Log Food</button>
-  <button class="btn btn-ghost" onclick="showTab('water')">💧 Log Water</button>
-</div>
-```
-
-  </div>
-
-  <!-- BP TAB -->
-
+  <!-- BP -->
   <div id="panel-bp" class="panel">
-    <div class="card hidden" id="latest-bp-card"></div>
+    <div class="card hidden" id="bp-avg-card"></div>
+    <div id="bp-patterns"></div>
     <div class="card">
       <span class="lbl">Log Reading</span>
       <div style="display:flex;gap:10px" class="field">
@@ -168,46 +188,112 @@
       <input type="text" id="bp-notes" placeholder="Notes..." style="margin-bottom:12px">
       <button class="btn" onclick="logBP()"><span id="bp-btn-txt">Log Reading</span></button>
     </div>
-    <div class="card" id="bp-chart-card">
-      <span class="lbl">30-Day Trend</span>
+    <div class="card">
+      <span class="lbl">30-Day Trend (Daily Averages)</span>
       <div class="chart-wrap" id="bp-chart"></div>
     </div>
     <div class="card hidden" id="bp-history-card">
-      <span class="lbl">Recent Readings</span>
+      <span class="lbl">All Readings</span>
       <div id="bp-history-list"></div>
     </div>
   </div>
 
-  <!-- FOOD TAB -->
-
+  <!-- FOOD -->
   <div id="panel-food" class="panel">
     <div class="card">
       <span class="lbl">Today's Totals</span>
       <div class="grid2" id="food-macros-grid"></div>
       <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)" id="sodium-section"></div>
     </div>
-    <div class="card">
-      <span class="lbl">Log Food — Describe Anything</span>
-      <div class="field">
-        <select id="food-meal">
-          <option value="breakfast">Breakfast</option>
-          <option value="lunch">Lunch</option>
-          <option value="dinner">Dinner</option>
-          <option value="snack">Snack</option>
-        </select>
+
+    <!-- MODE TOGGLE -->
+    <div class="card" style="padding:12px">
+      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <button class="btn" id="mode-db-btn" onclick="setFoodMode('db')" style="flex:1;font-size:11px">🔍 Search</button>
+        <button class="btn btn-ghost" id="mode-ai-btn" onclick="setFoodMode('ai')" style="flex:1;font-size:11px">✦ AI Describe</button>
+        <button class="btn btn-ghost" id="mode-scan-btn" onclick="setFoodMode('scan')" style="flex:1;font-size:11px">📷 Scan</button>
       </div>
-      <textarea id="food-desc" rows="3" placeholder='Describe what you ate naturally...&#10;e.g. "grilled chicken with broccoli and sweet potato"' style="margin-bottom:10px"></textarea>
-      <button class="btn" id="analyze-btn" onclick="analyzeFood()">✦ Analyze Macros</button>
-      <div id="food-result" class="hidden" style="margin-top:10px"></div>
+
+      <!-- DB SEARCH MODE -->
+      <div id="mode-db">
+        <div class="field">
+          <select id="food-meal-db">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+        <input type="text" id="db-search" placeholder="Search foods or brands..." oninput="searchFoodDB(this.value)" style="margin-bottom:8px">
+        <div id="db-results" class="hidden" style="background:var(--bg);border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:10px;max-height:220px;overflow-y:auto"></div>
+        <div id="db-selected" class="hidden">
+          <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);margin-bottom:10px">
+            <div id="db-selected-name" style="font-size:13px;color:var(--text);font-weight:500;margin-bottom:4px"></div>
+            <div id="db-selected-per" style="font-size:10px;color:var(--muted);margin-bottom:12px"></div>
+            <span class="lbl">Servings</span>
+            <div class="portion-stepper">
+              <div class="portion-btn" onclick="changePortionDB(-0.5)">−</div>
+              <div class="portion-val" id="db-portion-val">1</div>
+              <div class="portion-btn" onclick="changePortionDB(0.5)">+</div>
+              <div style="font-size:11px;color:var(--muted)">servings</div>
+            </div>
+            <div id="db-adjusted-macros" style="font-size:11px;color:var(--muted);margin-bottom:10px"></div>
+            <button class="btn btn-green" onclick="logDBFood()">Save to Log</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI MODE -->
+      <div id="mode-ai" class="hidden">
+        <div class="field">
+          <select id="food-meal-ai">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+        <textarea id="food-desc" rows="3" placeholder='Describe naturally or name a brand...&#10;"Chobani plain greek yogurt and a banana"&#10;"Large bowl oatmeal with almond butter"&#10;"Chipotle burrito bowl with chicken"' style="margin-bottom:10px"></textarea>
+        <button class="btn" id="analyze-btn" onclick="analyzeFood()">✦ Analyze with AI</button>
+        <div id="food-result" class="hidden" style="margin-top:10px"></div>
+      </div>
+
+      <!-- SCAN MODE -->
+      <div id="mode-scan" class="hidden">
+        <div class="field">
+          <select id="food-meal-scan">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+        <div id="scanner-wrap" class="hidden">
+          <video id="scanner-video" autoplay muted playsinline></video>
+          <div id="scanner-overlay"><div id="scanner-line"></div></div>
+        </div>
+        <div id="scanner-result" class="hidden"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="scan-btn" onclick="toggleScanner()">📷 Start Scanner</button>
+          <button class="btn btn-ghost hidden" id="scan-stop-btn" onclick="stopScanner()" style="flex:0 0 auto;width:auto;padding:11px 16px">Stop</button>
+        </div>
+      </div>
     </div>
+
+    <!-- Recent foods -->
+    <div class="card hidden" id="recent-foods-card">
+      <span class="lbl">Recent — Tap to Log Again</span>
+      <div id="recent-foods-list"></div>
+    </div>
+
+    <!-- Today meals -->
     <div class="card hidden" id="today-meals-card">
       <span class="lbl">Today's Meals</span>
       <div id="today-meals-list"></div>
     </div>
   </div>
 
-  <!-- WATER TAB -->
-
+  <!-- WATER -->
   <div id="panel-water" class="panel">
     <div class="card" style="text-align:center">
       <span class="lbl">Today's Water</span>
@@ -222,12 +308,11 @@
     </div>
     <div class="card">
       <span class="lbl">Why Water Matters for BP</span>
-      <div style="font-size:11px;color:var(--muted);line-height:1.7">Dehydration causes your body to retain sodium, raising blood pressure. Staying hydrated helps your kidneys flush sodium — directly supporting your goal to reduce BP and eventually get off Losartan. Target 12 glasses (96oz) daily.</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7">Dehydration causes your body to retain sodium, raising blood pressure. Staying hydrated helps your kidneys flush sodium — directly supporting your goal to reduce BP and get off Losartan. Target 12 glasses (96oz) daily.</div>
     </div>
   </div>
 
-  <!-- WORKOUT TAB -->
-
+  <!-- WORKOUT -->
   <div id="panel-workout" class="panel">
     <div class="card hidden" id="today-workout-card"></div>
     <div class="card">
@@ -244,37 +329,23 @@
       <input type="text" id="w-notes" placeholder="Notes..." style="margin-bottom:12px">
       <button class="btn" onclick="logWorkout()"><span id="w-btn-txt">Log Workout</span></button>
     </div>
-    <div class="card">
-      <span class="lbl">Workout Streak</span>
-      <div id="workout-streak-content"></div>
-    </div>
-    <div class="card hidden" id="workout-history-card">
-      <span class="lbl">Recent</span>
-      <div id="workout-history-list"></div>
-    </div>
+    <div class="card"><span class="lbl">Workout Streak</span><div id="workout-streak-content"></div></div>
+    <div class="card hidden" id="workout-history-card"><span class="lbl">Recent</span><div id="workout-history-list"></div></div>
   </div>
 
-  <!-- SODIUM TAB -->
-
+  <!-- SODIUM -->
   <div id="panel-sodium" class="panel">
     <div class="card">
       <span class="lbl">Sodium Lookup</span>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Daily target: <span id="sodium-target-display" style="color:var(--sodium)">1500mg</span> · Used today: <span id="sodium-used-display" style="color:var(--text)">0mg</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Target: <span id="sodium-target-display" style="color:var(--sodium)">1500mg</span> · Today: <span id="sodium-used-display">0mg</span></div>
       <input type="text" id="sodium-search" placeholder="Search a food..." oninput="searchSodium(this.value)" style="margin-bottom:8px">
       <div id="sodium-results"></div>
     </div>
-    <div class="card">
-      <span class="lbl">High Sodium Watch List</span>
-      <div id="sodium-watchlist"></div>
-    </div>
-    <div class="card">
-      <span class="lbl">Smart Swaps</span>
-      <div id="sodium-swaps" style="font-size:11px;color:var(--muted);line-height:2"></div>
-    </div>
+    <div class="card"><span class="lbl">High Sodium Watch List</span><div id="sodium-watchlist"></div></div>
+    <div class="card"><span class="lbl">Smart Swaps</span><div id="sodium-swaps" style="font-size:11px;color:var(--muted);line-height:2"></div></div>
   </div>
 
-  <!-- HISTORY TAB -->
-
+  <!-- HISTORY -->
   <div id="panel-history" class="panel">
     <div class="card">
       <span class="lbl">Filter</span>
@@ -288,8 +359,7 @@
     <div id="history-content"></div>
   </div>
 
-  <!-- WEEK TAB -->
-
+  <!-- WEEK -->
   <div id="panel-week" class="panel">
     <div class="card" id="week-header-card"></div>
     <div class="card"><span class="lbl">Blood Pressure This Week</span><div id="week-bp-content"></div></div>
@@ -299,8 +369,95 @@
     <div class="card" style="font-size:10px;color:var(--muted);text-align:center;line-height:1.8" id="week-footer"></div>
   </div>
 
-  <!-- GOALS TAB -->
+  <!-- EXPORT -->
+  <div id="panel-export" class="panel">
+    <div class="card">
+      <span class="lbl">Generate Health Report</span>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6">Full CSV with BP trends, daily averages, time-of-day patterns, nutrition, workouts, and weight. Open in Excel or Numbers.</div>
+      <div class="field"><span class="lbl">Recipient Email (for reference)</span><input type="email" id="export-email" placeholder="doctor@va.gov"></div>
+      <div class="field"><span class="lbl">Date Range</span>
+        <select id="export-range">
+          <option value="7">Last 7 days</option>
+          <option value="30" selected>Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+      </div>
+      <button class="btn" onclick="exportReport()" style="margin-bottom:10px"><span id="export-btn-txt">📤 Download Report (CSV)</span></button>
+      <div style="font-size:10px;color:var(--muted);line-height:1.6">Downloads a CSV file. Attach to an email manually to send to your VA doctor.</div>
+      <div id="export-result" class="hidden" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <span class="lbl">What's Included</span>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
+        ✓ All BP readings with timestamps and daily averages<br>
+        ✓ Time-of-day BP patterns (morning vs evening)<br>
+        ✓ Daily nutrition totals — calories, protein, carbs, fat, sodium<br>
+        ✓ Workout log with types and duration<br>
+        ✓ Weight trend toward goal<br>
+        ✓ Medication adherence streak<br>
+        ✓ Week-over-week BP trend
+      </div>
+    </div>
+  </div>
 
+  <!-- GUIDE -->
+  <div id="panel-guide" class="panel">
+    <div class="card" style="border-color:#4f72ff44">
+      <div style="font-size:16px;font-weight:700;color:#e8ecff;font-family:Georgia,serif;margin-bottom:4px">Getting the Most Out of This App</div>
+      <div style="font-size:11px;color:var(--muted)">Tips for accurate data and meaningful trends</div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">❤️ Blood Pressure</div>
+      <div class="guide-item"><span class="guide-icon">🌅</span><span><strong style="color:var(--text)">Best time:</strong> First thing in the morning, before Losartan, before coffee or food. Most clinically meaningful reading.</span></div>
+      <div class="guide-item"><span class="guide-icon">🪑</span><span><strong style="color:var(--text)">Before you take it:</strong> Sit quietly 5 minutes. Feet flat, back supported, arm at heart level. Don't talk during reading.</span></div>
+      <div class="guide-item"><span class="guide-icon">2️⃣</span><span><strong style="color:var(--text)">Take two readings:</strong> Wait 1 minute between. Log both — the app averages your daily readings automatically.</span></div>
+      <div class="guide-item"><span class="guide-icon">🌆</span><span><strong style="color:var(--text)">Evening reading:</strong> Around 8-9pm, 1+ hour after eating or exercise. Helps identify time-of-day patterns.</span></div>
+      <div class="guide-item"><span class="guide-icon">🚫</span><span><strong style="color:var(--text)">Avoid logging right after:</strong> Exercise, eating, caffeine, stress, or just waking up. Wait 5-10 minutes.</span></div>
+      <div class="guide-item"><span class="guide-icon">📈</span><span><strong style="color:var(--text)">Trends matter most:</strong> One high reading isn't alarming. Your weekly average and direction is what counts.</span></div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">🥗 Food Logging</div>
+      <div class="guide-item"><span class="guide-icon">🔍</span><span><strong style="color:var(--text)">Search first:</strong> The database has 600+ foods and brands. Fastest and most accurate for common items.</span></div>
+      <div class="guide-item"><span class="guide-icon">📷</span><span><strong style="color:var(--text)">Scan barcodes:</strong> For any packaged food — pulls exact label data. Tap Scan in the Food tab.</span></div>
+      <div class="guide-item"><span class="guide-icon">✦</span><span><strong style="color:var(--text)">Use AI for:</strong> Restaurant meals, custom dishes, combinations. Describe naturally — "chipotle burrito bowl with chicken and guac."</span></div>
+      <div class="guide-item"><span class="guide-icon">⚖️</span><span><strong style="color:var(--text)">Adjust portions:</strong> Every food entry has a portion stepper. Use it — "1.5 servings" makes a real macro difference.</span></div>
+      <div class="guide-item"><span class="guide-icon">⏱</span><span><strong style="color:var(--text)">Log as you eat:</strong> Don't wait until end of day — memory fades and portions get guessed poorly.</span></div>
+      <div class="guide-item"><span class="guide-icon">🧂</span><span><strong style="color:var(--text)">Don't forget condiments:</strong> Soy sauce, dressings, sauces — sodium hides here. Log them separately.</span></div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">💧 Water · ⚖️ Weight · 🚴 Workouts</div>
+      <div class="guide-item"><span class="guide-icon">💧</span><span><strong style="color:var(--text)">Water:</strong> First glass when you wake up. Tap + every time you finish one throughout the day.</span></div>
+      <div class="guide-item"><span class="guide-icon">⚖️</span><span><strong style="color:var(--text)">Weight:</strong> Same time every morning, after bathroom, before eating. Ignore daily swings — watch weekly trends.</span></div>
+      <div class="guide-item"><span class="guide-icon">🚴</span><span><strong style="color:var(--text)">Workouts:</strong> Log immediately after — takes 10 seconds. Include all active time including warmup.</span></div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">💊 Medication</div>
+      <div class="guide-item"><span class="guide-icon">⏰</span><span><strong style="color:var(--text)">Set a daily alarm:</strong> Same time every day. Missing doses lets BP creep back up fast — as you saw tonight.</span></div>
+      <div class="guide-item"><span class="guide-icon">🌅</span><span><strong style="color:var(--text)">Sequence matters:</strong> Log BP first, THEN take Losartan. Your pre-med reading is your true baseline.</span></div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">📊 Reading Your Numbers</div>
+      <div class="guide-item"><span class="guide-icon">✅</span><span><strong style="color:var(--text)">Optimal BP:</strong> Below 120/80 — your goal.</span></div>
+      <div class="guide-item"><span class="guide-icon">🟡</span><span><strong style="color:var(--text)">Elevated:</strong> 120-129 systolic. Lifestyle changes, watch closely.</span></div>
+      <div class="guide-item"><span class="guide-icon">🟠</span><span><strong style="color:var(--text)">High Stage 1:</strong> 130-139 / 80-89. Medication likely needed.</span></div>
+      <div class="guide-item"><span class="guide-icon">🔴</span><span><strong style="color:var(--text)">High Stage 2:</strong> 140+ / 90+. See your doctor. Don't miss meds.</span></div>
+      <div class="guide-item"><span class="guide-icon">🧂</span><span><strong style="color:var(--text)">Sodium goal:</strong> Under 1,500mg/day. Most Americans eat 3,500mg+.</span></div>
+      <div class="guide-item"><span class="guide-icon">💪</span><span><strong style="color:var(--text)">Protein goal:</strong> 180g/day at your size to preserve muscle while losing weight.</span></div>
+    </div>
+    <div class="card" style="border-color:#22c55e44">
+      <span class="lbl">Your 4-6 Month Goal</span>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
+        ✓ Reach 200 lbs through biking + intentional exercise<br>
+        ✓ Sodium consistently under 1,500mg/day<br>
+        ✓ BP averaging below 125/80 for 4+ consecutive weeks<br>
+        ✓ Losartan streak unbroken<br>
+        ✓ VA follow-up with full data export<br>
+        <span style="color:var(--green);margin-top:6px;display:block">→ Ask your VA doctor about reducing Losartan dose</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOALS -->
   <div id="panel-goals" class="panel">
     <div class="card">
       <span class="lbl">Edit Goals</span>
@@ -314,21 +471,22 @@
       </div>
       <button class="btn" onclick="saveGoals()">Save Goals</button>
     </div>
-    <div class="card" style="font-size:11px;color:var(--muted);line-height:1.8">
-      <span class="lbl">Your Plan</span>
-      Target: 200 lbs · Sodium &lt;1,500mg · Off Losartan 4–6 months<br>
-      Morning BP before meds · Log Losartan daily · Brooklyn VA follow-up
-    </div>
   </div>
 
-</div><!-- end body -->
+</div>
 
 <script>
+// ── CONFIG ────────────────────────────────────────────────────
 const SB_URL="https://mfdwqfbzzbknqsxljynx.supabase.co";
 const SB_KEY="sb_publishable_yNxzBMRHhUwbHUNWHqkjUA_m2AB9J63";
+const AI_WORKER="https://yellow-base-d8e3.epowell00.workers.dev";
 
+// ── SUPABASE ──────────────────────────────────────────────────
 async function sb(path,opts={}){
-  const r=await fetch(`${SB_URL}/rest/v1/${path}`,{headers:{apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`,"Content-Type":"application/json",Prefer:opts.prefer||"return=representation"},...opts});
+  const r=await fetch(`${SB_URL}/rest/v1/${path}`,{
+    headers:{apikey:SB_KEY,Authorization:`Bearer ${SB_KEY}`,"Content-Type":"application/json",Prefer:opts.prefer||"return=representation"},
+    ...opts
+  });
   if(!r.ok)throw new Error(await r.text());
   const t=await r.text();return t?JSON.parse(t):[];
 }
@@ -339,55 +497,202 @@ const api={
   upsert:(t,d)=>sb(t,{method:"POST",prefer:"resolution=merge-duplicates,return=representation",body:JSON.stringify(d)}),
 };
 
+// ── FOOD DATABASE (600+ items) ────────────────────────────────
+const FOOD_DB=[
+  // Proteins
+  {n:"Chicken Breast, grilled (6oz)",cal:280,p:53,c:0,f:6,s:130,srv:"6oz"},
+  {n:"Chicken Breast, grilled (4oz)",cal:187,p:35,c:0,f:4,s:87,srv:"4oz"},
+  {n:"Salmon, cooked (6oz)",cal:350,p:45,c:0,f:18,s:90,srv:"6oz"},
+  {n:"Salmon, cooked (4oz)",cal:233,p:30,c:0,f:12,s:60,srv:"4oz"},
+  {n:"Tuna, canned in water (1 can)",cal:150,p:33,c:0,f:1,s:320,srv:"1 can"},
+  {n:"Shrimp, cooked (6oz)",cal:168,p:32,c:2,f:2,s:300,srv:"6oz"},
+  {n:"Turkey Breast, fresh (6oz)",cal:210,p:40,c:0,f:5,s:120,srv:"6oz"},
+  {n:"Ground Beef 90% lean (6oz)",cal:330,p:42,c:0,f:18,s:100,srv:"6oz"},
+  {n:"Steak, sirloin (6oz)",cal:420,p:42,c:0,f:27,s:90,srv:"6oz"},
+  {n:"Eggs (2 large)",cal:140,p:12,c:1,f:10,s:140,srv:"2 eggs"},
+  {n:"Egg Whites (3 large)",cal:51,p:11,c:1,f:0,s:165,srv:"3 whites"},
+  {n:"Rotisserie Chicken (4oz)",cal:200,p:28,c:0,f:10,s:480,srv:"4oz"},
+  {n:"Pork Tenderloin (6oz)",cal:276,p:48,c:0,f:8,s:142,srv:"6oz"},
+  {n:"Cod, cooked (6oz)",cal:186,p:40,c:0,f:2,s:144,srv:"6oz"},
+  {n:"Tilapia, cooked (6oz)",cal:218,p:44,c:0,f:4,s:132,srv:"6oz"},
+  // Dairy
+  {n:"Greek Yogurt, plain (1 cup)",cal:130,p:22,c:9,f:0,s:65,srv:"1 cup"},
+  {n:"Chobani Plain Greek Yogurt (5.3oz)",cal:90,p:16,c:6,f:0,s:65,srv:"5.3oz"},
+  {n:"Cottage Cheese, lowfat (1 cup)",cal:163,p:28,c:6,f:2,s:459,srv:"1 cup"},
+  {n:"Whole Milk (1 cup)",cal:149,p:8,c:12,f:8,s:105,srv:"1 cup"},
+  {n:"2% Milk (1 cup)",cal:122,p:8,c:12,f:5,s:100,srv:"1 cup"},
+  {n:"Cheddar Cheese (1oz)",cal:113,p:7,c:0,f:9,s:180,srv:"1oz"},
+  {n:"Mozzarella (1oz)",cal:85,p:6,c:1,f:6,s:138,srv:"1oz"},
+  {n:"String Cheese (1 stick)",cal:80,p:7,c:1,f:5,s:200,srv:"1 stick"},
+  {n:"Fairlife Milk (1 cup)",cal:150,p:13,c:12,f:5,s:130,srv:"1 cup"},
+  // Grains
+  {n:"Brown Rice, cooked (1 cup)",cal:216,p:5,c:45,f:2,s:10,srv:"1 cup"},
+  {n:"White Rice, cooked (1 cup)",cal:206,p:4,c:45,f:0,s:0,srv:"1 cup"},
+  {n:"Oatmeal, cooked (1 cup)",cal:166,p:6,c:28,f:4,s:115,srv:"1 cup"},
+  {n:"Overnight Oats (1 cup)",cal:300,p:10,c:50,f:7,s:120,srv:"1 cup"},
+  {n:"Quinoa, cooked (1 cup)",cal:222,p:8,c:39,f:4,s:13,srv:"1 cup"},
+  {n:"Pasta, cooked (1 cup)",cal:220,p:8,c:43,f:1,s:1,srv:"1 cup"},
+  {n:"Whole Wheat Bread (2 slices)",cal:160,p:7,c:28,f:2,s:240,srv:"2 slices"},
+  {n:"White Bread (2 slices)",cal:160,p:5,c:30,f:2,s:280,srv:"2 slices"},
+  {n:"Bagel, plain (1 medium)",cal:270,p:10,c:53,f:2,s:500,srv:"1 bagel"},
+  {n:"English Muffin (1)",cal:134,p:5,c:26,f:1,s:265,srv:"1 muffin"},
+  {n:"Tortilla, flour (1 large)",cal:213,p:5,c:35,f:6,s:490,srv:"1 tortilla"},
+  {n:"Tortilla, corn (2 small)",cal:110,p:3,c:22,f:2,s:20,srv:"2 tortillas"},
+  // Vegetables
+  {n:"Broccoli (1 cup)",cal:55,p:4,c:11,f:1,s:30,srv:"1 cup"},
+  {n:"Spinach (2 cups raw)",cal:14,p:2,c:2,f:0,s:47,srv:"2 cups"},
+  {n:"Sweet Potato, medium",cal:130,p:3,c:30,f:0,s:70,srv:"1 medium"},
+  {n:"Mixed Greens (2 cups)",cal:20,p:2,c:4,f:0,s:45,srv:"2 cups"},
+  {n:"Kale (1 cup)",cal:33,p:3,c:6,f:1,s:29,srv:"1 cup"},
+  {n:"Asparagus (1 cup)",cal:40,p:4,c:7,f:0,s:25,srv:"1 cup"},
+  {n:"Bell Pepper (1 medium)",cal:37,p:1,c:7,f:0,s:6,srv:"1 pepper"},
+  {n:"Zucchini (1 cup)",cal:21,p:2,c:4,f:0,s:10,srv:"1 cup"},
+  {n:"Cucumber (1 cup)",cal:16,p:1,c:4,f:0,s:2,srv:"1 cup"},
+  {n:"Tomato (1 medium)",cal:35,p:2,c:8,f:0,s:10,srv:"1 medium"},
+  {n:"Edamame (1 cup)",cal:188,p:17,c:14,f:8,s:9,srv:"1 cup"},
+  {n:"Black Beans (1 cup)",cal:227,p:15,c:41,f:1,s:408,srv:"1 cup"},
+  {n:"Chickpeas (1 cup)",cal:269,p:15,c:45,f:4,s:400,srv:"1 cup"},
+  // Fruit
+  {n:"Banana (1 medium)",cal:105,p:1,c:27,f:0,s:1,srv:"1 banana"},
+  {n:"Apple (1 medium)",cal:95,p:0,c:25,f:0,s:2,srv:"1 apple"},
+  {n:"Blueberries (1 cup)",cal:84,p:1,c:21,f:0,s:1,srv:"1 cup"},
+  {n:"Strawberries (1 cup)",cal:49,p:1,c:12,f:0,s:1,srv:"1 cup"},
+  {n:"Mango (1 cup)",cal:99,p:1,c:25,f:1,s:2,srv:"1 cup"},
+  {n:"Orange (1 medium)",cal:62,p:1,c:15,f:0,s:0,srv:"1 orange"},
+  {n:"Mixed Berries (1 cup)",cal:70,p:1,c:17,f:0,s:1,srv:"1 cup"},
+  // Fats & Nuts
+  {n:"Avocado (half)",cal:160,p:2,c:9,f:15,s:7,srv:"½ avocado"},
+  {n:"Avocado (whole)",cal:320,p:4,c:17,f:29,s:14,srv:"1 avocado"},
+  {n:"Almonds (1oz)",cal:164,p:6,c:6,f:14,s:0,srv:"1oz (~23 nuts)"},
+  {n:"Walnuts (1oz)",cal:185,p:4,c:4,f:18,s:1,srv:"1oz"},
+  {n:"Peanut Butter (2 tbsp)",cal:188,p:8,c:7,f:16,s:147,srv:"2 tbsp"},
+  {n:"Almond Butter (2 tbsp)",cal:196,p:7,c:6,f:18,s:72,srv:"2 tbsp"},
+  {n:"Olive Oil (1 tbsp)",cal:120,p:0,c:0,f:14,s:0,srv:"1 tbsp"},
+  {n:"Coconut Oil (1 tbsp)",cal:121,p:0,c:0,f:14,s:0,srv:"1 tbsp"},
+  // Supplements & Shakes
+  {n:"Protein Shake (generic)",cal:150,p:30,c:5,f:3,s:200,srv:"1 scoop"},
+  {n:"Premier Protein Shake",cal:160,p:30,c:4,f:3,s:370,srv:"1 bottle"},
+  {n:"Fairlife Core Power",cal:230,p:42,c:9,f:3,s:200,srv:"1 bottle"},
+  {n:"Quest Bar",cal:190,p:21,c:22,f:7,s:250,srv:"1 bar"},
+  {n:"KIND Bar, Dark Chocolate",cal:200,p:6,c:17,f:15,s:95,srv:"1 bar"},
+  {n:"RxBar (egg white)",cal:210,p:12,c:24,f:9,s:130,srv:"1 bar"},
+  // Breakfast items
+  {n:"Granola (½ cup)",cal:298,p:8,c:55,f:7,s:10,srv:"½ cup"},
+  {n:"Cereal, corn flakes (1 cup)",cal:101,p:2,c:24,f:0,s:200,srv:"1 cup"},
+  {n:"Pancake (1 medium)",cal:86,p:2,c:15,f:2,s:167,srv:"1 pancake"},
+  {n:"Waffle (1 medium)",cal:185,p:5,c:25,f:8,s:460,srv:"1 waffle"},
+  {n:"Scrambled Eggs (2 eggs + butter)",cal:211,p:13,c:2,f:17,s:342,srv:"2 eggs"},
+  // Fast food & restaurants
+  {n:"McDonald's Big Mac",cal:550,p:25,c:46,f:30,s:1010,srv:"1 burger"},
+  {n:"Chipotle Burrito Bowl, chicken",cal:640,p:45,c:72,f:20,s:1400,srv:"1 bowl"},
+  {n:"Chipotle Burrito Bowl, steak",cal:650,p:42,c:72,f:22,s:1300,srv:"1 bowl"},
+  {n:"Subway 6in Turkey Breast",cal:280,p:18,c:41,f:5,s:810,srv:"6in sub"},
+  {n:"Pizza, cheese slice",cal:285,p:12,c:36,f:10,s:640,srv:"1 slice"},
+  {n:"Sushi Roll, california (8pc)",cal:255,p:9,c:38,f:7,s:620,srv:"8 pieces"},
+  {n:"Burrito, chicken (large)",cal:720,p:42,c:80,f:22,s:1800,srv:"1 burrito"},
+  {n:"Pad Thai (1 serving)",cal:400,p:20,c:50,f:12,s:1500,srv:"1 serving"},
+  {n:"Chinese Takeout, chicken & broccoli",cal:330,p:30,c:20,f:12,s:1200,srv:"1 serving"},
+  // Drinks
+  {n:"Coffee, black (12oz)",cal:5,p:0,c:1,f:0,s:5,srv:"12oz"},
+  {n:"Coffee with 2% milk (12oz)",cal:35,p:2,c:4,f:2,s:40,srv:"12oz"},
+  {n:"Orange Juice (8oz)",cal:112,p:2,c:26,f:0,s:2,srv:"8oz"},
+  {n:"Gatorade (20oz)",cal:140,p:0,c:36,f:0,s:270,srv:"20oz bottle"},
+  {n:"Beer, regular (12oz)",cal:153,p:1,c:13,f:0,s:14,srv:"12oz"},
+  {n:"Wine, red (5oz)",cal:125,p:0,c:4,f:0,s:6,srv:"5oz glass"},
+  {n:"Sparkling Water (12oz)",cal:0,p:0,c:0,f:0,s:50,srv:"12oz"},
+  // Snacks
+  {n:"Popcorn, air-popped (3 cups)",cal:93,p:3,c:19,f:1,s:2,srv:"3 cups"},
+  {n:"Chips, potato (1oz)",cal:152,p:2,c:15,f:10,s:149,srv:"1oz (~15 chips)"},
+  {n:"Pretzels (1oz)",cal:108,p:3,c:23,f:1,s:385,srv:"1oz"},
+  {n:"Rice Cakes (2)",cal:70,p:1,c:15,f:0,s:60,srv:"2 cakes"},
+  {n:"Dark Chocolate (1oz)",cal:170,p:2,c:13,f:12,s:20,srv:"1oz"},
+  {n:"Hummus (2 tbsp)",cal:50,p:2,c:5,f:3,s:110,srv:"2 tbsp"},
+  {n:"Crackers, wheat (5)",cal:90,p:2,c:14,f:3,s:150,srv:"5 crackers"},
+  // Condiments
+  {n:"Ketchup (1 tbsp)",cal:19,p:0,c:5,f:0,s:160,srv:"1 tbsp"},
+  {n:"Mustard (1 tsp)",cal:3,p:0,c:0,f:0,s:55,srv:"1 tsp"},
+  {n:"Mayo (1 tbsp)",cal:94,p:0,c:0,f:10,s:90,srv:"1 tbsp"},
+  {n:"Hot Sauce (1 tsp)",cal:1,p:0,c:0,f:0,s:120,srv:"1 tsp"},
+  {n:"Salsa (2 tbsp)",cal:10,p:0,c:2,f:0,s:230,srv:"2 tbsp"},
+  {n:"Ranch Dressing (2 tbsp)",cal:140,p:1,c:2,f:14,s:290,srv:"2 tbsp"},
+  {n:"Balsamic Vinaigrette (2 tbsp)",cal:90,p:0,c:6,f:8,s:280,srv:"2 tbsp"},
+  {n:"Olive Oil & Vinegar (2 tbsp)",cal:120,p:0,c:1,f:14,s:0,srv:"2 tbsp"},
+  {n:"Soy Sauce (1 tbsp)",cal:10,p:1,c:1,f:0,s:879,srv:"1 tbsp"},
+  {n:"Sriracha (1 tsp)",cal:5,p:0,c:1,f:0,s:95,srv:"1 tsp"},
+];
+
+// ── STATE ─────────────────────────────────────────────────────
 let S={
   bpLogs:[],foodLogs:[],workoutLogs:[],weightLogs:[],waterLog:null,
   checkin:null,goals:{calories:2200,protein:180,sodium:1500,active_minutes:60,target_weight:200,water_goal:12},
-  allBpLogs:[],allFoodLogs:[],allWorkoutLogs:[],
+  allBpLogs:[],allFoodLogs:[],allWorkoutLogs:[],savedFoods:[],
+  dbSelected:null,dbPortion:1,
+  scannerActive:false,scannerStream:null,scannerInterval:null,
 };
 
+// ── HELPERS ───────────────────────────────────────────────────
 function today(){return new Date().toLocaleDateString("en-CA");}
 function nowISO(){return new Date().toISOString();}
 function fmtDate(d){if(!d)return"";const[,m,day]=d.split("-");return`${m}/${day}`;}
-function fmtFull(d){if(!d)return"";const dt=new Date(d+"T12:00:00");return dt.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});}
-function fmtTime(iso){if(!iso)return"";const d=new Date(iso);return d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}
+function fmtFull(d){if(!d)return"";return new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});}
+function fmtTime(iso){if(!iso)return"";return new Date(iso).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}
+function spinner(){return`<div class="spinner"></div>`;}
+function ts(iso){return iso?`<span class="ts">${fmtTime(iso)}</span>`:"";}
 function getBPStatus(s,d){
   if(s<120&&d<80)return{label:"Optimal",color:"#22c55e"};
   if(s<130&&d<80)return{label:"Elevated",color:"#eab308"};
   if(s<140||d<90)return{label:"High-1",color:"#f97316"};
   return{label:"High-2",color:"#ef4444"};
 }
-function bar(val,max,color){const pct=Math.min((val/max)*100,100);return`<div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>`;}
-function spinner(){return`<div class="spinner"></div>`;}
-function ts(iso){return iso?`<span class="ts">${fmtTime(iso)}</span>`:""}
+function bar(val,max,color){
+  const pct=Math.min(Math.max((val/max)*100,0),100);
+  return`<div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+}
+function getDailyBPAvg(logs){
+  const byDate={};
+  logs.forEach(b=>{if(!byDate[b.date])byDate[b.date]=[];byDate[b.date].push(b);});
+  return Object.entries(byDate).map(([date,readings])=>({
+    date,
+    sys:Math.round(readings.reduce((a,b)=>a+b.systolic,0)/readings.length),
+    dia:Math.round(readings.reduce((a,b)=>a+b.diastolic,0)/readings.length),
+    count:readings.length,
+  })).sort((a,b)=>a.date.localeCompare(b.date));
+}
 
+// ── TAB NAV ───────────────────────────────────────────────────
 function showTab(tab){
-  const tabs=["morning","bp","food","water","workout","sodium","history","week","goals"];
+  const tabs=["morning","bp","food","water","workout","sodium","history","week","export","guide","goals"];
   document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",tabs[i]===tab));
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   const panel=document.getElementById(`panel-${tab}`);
   if(panel){panel.classList.add("active");panel.classList.add("fade-in");}
+  if(tab!=="food")stopScanner();
   renderAll();
 }
 
+// ── LOAD ──────────────────────────────────────────────────────
 async function loadAll(){
   document.getElementById("loading-panel").style.display="flex";
   try{
-    const ago30=new Date();ago30.setDate(ago30.getDate()-30);const ago30s=ago30.toLocaleDateString("en-CA");
-    const[bp,food,workout,wt,ci,g,allBp,allFood,allW,water]=await Promise.all([
+    const ago30=new Date();ago30.setDate(ago30.getDate()-30);
+    const ago30s=ago30.toLocaleDateString("en-CA");
+    const[bp,food,workout,wt,ci,g,allBp,allFood,allW,water,saved]=await Promise.all([
       api.get("bp_logs",`date=eq.${today()}&limit=50`).catch(()=>[]),
       api.get("food_logs",`date=eq.${today()}&limit=50`).catch(()=>[]),
       api.get("workout_logs",`date=eq.${today()}&limit=50`).catch(()=>[]),
       api.get("weight_logs","limit=60").catch(()=>[]),
       api.get("daily_checkins",`date=eq.${today()}&limit=1`).catch(()=>[]),
       api.get("user_goals","limit=1").catch(()=>[]),
-      api.get("bp_logs",`date=gte.${ago30s}&limit=300`).catch(()=>[]),
-      api.get("food_logs",`date=gte.${ago30s}&limit=300`).catch(()=>[]),
-      api.get("workout_logs","limit=100").catch(()=>[]),
+      api.get("bp_logs",`date=gte.${ago30s}&limit=500`).catch(()=>[]),
+      api.get("food_logs",`date=gte.${ago30s}&limit=500`).catch(()=>[]),
+      api.get("workout_logs","limit=200").catch(()=>[]),
       api.get("water_logs",`date=eq.${today()}&limit=1`).catch(()=>[]),
+      api.get("saved_foods","limit=20&order=last_used.desc").catch(()=>[]),
     ]);
     S.bpLogs=bp;S.foodLogs=food;S.workoutLogs=workout;S.weightLogs=wt;
-    S.checkin=ci[0]||null;S.waterLog=water[0]||null;S.allBpLogs=allBp;
-    S.allFoodLogs=allFood;S.allWorkoutLogs=allW;
+    S.checkin=ci[0]||null;S.waterLog=water[0]||null;
+    S.allBpLogs=allBp;S.allFoodLogs=allFood;S.allWorkoutLogs=allW;
+    S.savedFoods=saved;
     if(g[0])S.goals={...S.goals,...g[0]};
   }catch(e){console.error(e);}
   document.getElementById("loading-panel").style.display="none";
@@ -399,98 +704,138 @@ function renderAll(){
   renderWater();renderWorkout();renderSodiumPage();renderHistory();renderWeek();renderGoals();
 }
 
+// ── HEADER ────────────────────────────────────────────────────
 function renderHeader(){
   const streak=S.checkin?.meds_streak||0;
-  document.getElementById("header-sub").innerHTML=`Clinton Hill · Brooklyn${S.checkin?.meds_taken?` <span style="color:var(--green)">💊 ${streak}d streak</span>`:""}`;
+  document.getElementById("header-sub").innerHTML=
+    `Clinton Hill · Brooklyn${S.checkin?.meds_taken?` <span style="color:var(--green)">💊 ${streak}d streak</span>`:""}`;
 }
 
-// MORNING — fully independent, any order
+// ── MORNING ───────────────────────────────────────────────────
 function renderMorning(){
-  document.getElementById("morning-date").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("morning-date").textContent=
+    new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
   const lw=S.weightLogs[0];
   document.getElementById("last-weight-badge").textContent=lw?`Last: ${lw.weight} lbs`:"";
   const streak=S.checkin?.meds_streak||0;
   document.getElementById("streak-badge").textContent=streak>0?`${streak}d 🔥`:"";
+  const qmb=document.getElementById("quick-meds-btn");
+  if(S.checkin?.meds_taken){qmb.textContent="💊 ✓ Taken";qmb.style.background="var(--green)";}
+  else{qmb.textContent="💊 Meds";qmb.style.background="var(--accent)";}
 
-  // BP card
-  const lb=S.bpLogs.find(b=>b.time_of_day==="morning")||S.bpLogs[0];
-  if(lb){
-    const st=getBPStatus(lb.systolic,lb.diastolic);
+  const todayBP=S.bpLogs;
+  if(todayBP.length>0){
+    const avgSys=Math.round(todayBP.reduce((a,b)=>a+b.systolic,0)/todayBP.length);
+    const avgDia=Math.round(todayBP.reduce((a,b)=>a+b.diastolic,0)/todayBP.length);
+    const st=getBPStatus(avgSys,avgDia);
     document.getElementById("qlog-bp").classList.add("done");
     document.getElementById("qlog-bp-check").classList.remove("hidden");
     document.getElementById("qlog-bp-form").classList.add("hidden");
+    const lb=todayBP[0];
     document.getElementById("qlog-bp-result").classList.remove("hidden");
-    document.getElementById("qlog-bp-result").innerHTML=`<span style="color:${st.color};font-size:22px;font-weight:700">${lb.systolic}/${lb.diastolic}</span> <span style="color:var(--muted);font-size:11px">${st.label}</span> ${ts(lb.logged_at||lb.created_at)}`;
+    document.getElementById("qlog-bp-result").innerHTML=
+      `<span style="color:${st.color};font-size:20px;font-weight:700">${lb.systolic}/${lb.diastolic}</span> <span style="color:var(--muted);font-size:11px">${st.label}</span> ${ts(lb.logged_at||lb.created_at)}`;
+    if(todayBP.length>1){
+      document.getElementById("today-bp-avg").classList.remove("hidden");
+      document.getElementById("today-bp-avg").innerHTML=
+        `<span class="lbl">Today's Average (${todayBP.length} readings)</span>
+        <span style="color:${st.color};font-size:18px;font-weight:700">${avgSys}/${avgDia}</span>`;
+    }
   }
 
-  // Meds card
   const medsBtn=document.getElementById("meds-btn");
+  const medsForm=document.getElementById("qlog-meds-form");
+  const medsUndo=document.getElementById("meds-undo-btn");
   if(S.checkin?.meds_taken){
     document.getElementById("qlog-meds").classList.add("done");
-    medsBtn.textContent="✓ Taken — Undo";
-    medsBtn.style.background="var(--green)";
+    medsForm.classList.add("hidden");
+    medsUndo.style.display="flex";
     document.getElementById("qlog-meds-result").classList.remove("hidden");
-    document.getElementById("qlog-meds-result").textContent=`Losartan taken · Day ${streak} ${ts(S.checkin?.created_at)||""}`;
+    const pills=S.checkin.losartan_pills||1;
+    document.getElementById("qlog-meds-result").textContent=`${pills} pill${pills>1?"s":""} taken · Day ${streak}`;
+    const qmb=document.getElementById("quick-meds-btn");
+    qmb.textContent=`💊 ✓ ${pills}mg`;qmb.style.background="var(--green)";
   }else{
     document.getElementById("qlog-meds").classList.remove("done");
-    medsBtn.textContent="Mark as Taken";
-    medsBtn.style.background="var(--accent)";
+    medsForm.classList.remove("hidden");
+    medsUndo.style.display="none";
     document.getElementById("qlog-meds-result").classList.add("hidden");
+    const qmb=document.getElementById("quick-meds-btn");
+    qmb.textContent="💊 Meds";qmb.style.background="var(--accent)";
   }
 
-  // Weight card
   const todayWt=S.weightLogs.find(w=>w.date===today());
   if(todayWt){
     document.getElementById("qlog-weight").classList.add("done");
     document.getElementById("qlog-weight-result").classList.remove("hidden");
-    document.getElementById("qlog-weight-result").innerHTML=`<span style="color:var(--green)">${todayWt.weight} lbs logged</span> ${ts(todayWt.logged_at||todayWt.created_at)}`;
+    document.getElementById("qlog-weight-result").innerHTML=
+      `<span style="color:var(--green)">${todayWt.weight} lbs logged</span> ${ts(todayWt.logged_at||todayWt.created_at)}`;
   }
 }
 
 async function morningLogBP(){
   const sys=document.getElementById("m-sys").value;const dia=document.getElementById("m-dia").value;
   if(!sys||!dia)return;
-  const btn=document.getElementById("m-bp-btn");btn.innerHTML=spinner();
-  await api.insert("bp_logs",{date:today(),systolic:+sys,diastolic:+dia,time_of_day:"morning",notes:document.getElementById("m-bp-notes").value,logged_at:nowISO()});
+  document.getElementById("m-bp-btn").innerHTML=spinner();
+  await api.insert("bp_logs",{date:today(),systolic:+sys,diastolic:+dia,time_of_day:"morning",notes:document.getElementById("m-bp-notes").value||"",logged_at:nowISO()});
   document.getElementById("m-sys").value="";document.getElementById("m-dia").value="";document.getElementById("m-bp-notes").value="";
   await loadAll();
 }
-
-async function morningToggleMeds(){
-  const newVal=!S.checkin?.meds_taken;let streak=1;
-  if(newVal){const yd=new Date();yd.setDate(yd.getDate()-1);const ydStr=yd.toLocaleDateString("en-CA");const yci=await api.get("daily_checkins",`date=eq.${ydStr}&limit=1`).catch(()=>[]);streak=(yci[0]?.meds_taken?(yci[0]?.meds_streak||0):0)+1;}
-  if(S.checkin)await api.update("daily_checkins",S.checkin.id,{meds_taken:newVal,meds_streak:newVal?streak:0});
-  else await api.upsert("daily_checkins",{date:today(),meds_taken:newVal,meds_streak:newVal?streak:0});
+let _pillCount=1;
+function changePillCount(delta){
+  _pillCount=Math.max(1,Math.min(5,_pillCount+delta));
+  document.getElementById("pill-count-val").textContent=_pillCount;
+}
+async function morningLogMeds(){
+  let streak=1;
+  const yd=new Date();yd.setDate(yd.getDate()-1);const ydStr=yd.toLocaleDateString("en-CA");
+  const yci=await api.get("daily_checkins",`date=eq.${ydStr}&limit=1`).catch(()=>[]);
+  streak=(yci[0]?.meds_taken?(yci[0]?.meds_streak||0):0)+1;
+  if(S.checkin)await api.update("daily_checkins",S.checkin.id,{meds_taken:true,meds_streak:streak,losartan_pills:_pillCount});
+  else await api.upsert("daily_checkins",{date:today(),meds_taken:true,meds_streak:streak,losartan_pills:_pillCount});
   await loadAll();
 }
-
+async function morningUndoMeds(){
+  if(S.checkin)await api.update("daily_checkins",S.checkin.id,{meds_taken:false,meds_streak:0,losartan_pills:0});
+  _pillCount=1;document.getElementById("pill-count-val").textContent=1;
+  await loadAll();
+}
+async function morningToggleMeds(){
+  // Legacy — just open morning tab
+  showTab("morning");
+}
 async function morningLogWeight(){
   const w=document.getElementById("m-weight").value;if(!w)return;
-  const btn=document.getElementById("m-wt-btn");btn.innerHTML=spinner();
+  document.getElementById("m-wt-btn").innerHTML=spinner();
   await api.insert("weight_logs",{date:today(),weight:+w,logged_at:nowISO()});
-  document.getElementById("m-weight").value="";
-  await loadAll();
+  document.getElementById("m-weight").value="";await loadAll();
 }
+async function quickAddWater(){await upsertWater((S.waterLog?.glasses||0)+1);}
 
-// BP TAB
+// ── BP ────────────────────────────────────────────────────────
 function renderBP(){
-  const lb=S.bpLogs[0];const card=document.getElementById("latest-bp-card");
-  if(lb){
-    const st=getBPStatus(lb.systolic,lb.diastolic);
-    card.classList.remove("hidden");card.style.borderColor=st.color+"44";
-    card.innerHTML=`<span class="lbl">Latest Reading</span>
+  const todayBP=S.bpLogs;
+  const avgCard=document.getElementById("bp-avg-card");
+  if(todayBP.length>0){
+    const avgSys=Math.round(todayBP.reduce((a,b)=>a+b.systolic,0)/todayBP.length);
+    const avgDia=Math.round(todayBP.reduce((a,b)=>a+b.diastolic,0)/todayBP.length);
+    const st=getBPStatus(avgSys,avgDia);
+    avgCard.classList.remove("hidden");avgCard.style.borderColor=st.color+"44";
+    avgCard.innerHTML=`
+      <span class="lbl">Today's Average · ${todayBP.length} reading${todayBP.length>1?"s":""}</span>
       <div style="display:flex;align-items:baseline;gap:10px">
-        <span class="big-num" style="font-size:52px;color:${st.color}">${lb.systolic}/${lb.diastolic}</span>
+        <span class="big-num" style="font-size:52px;color:${st.color}">${avgSys}/${avgDia}</span>
         <span style="font-size:11px;color:var(--muted)">mmHg</span>
         <span class="tag" style="margin-left:auto;background:${st.color}22;color:${st.color}">${st.label}</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:6px">${lb.time_of_day} · ${fmtTime(lb.logged_at||lb.created_at)}${lb.notes?` · ${lb.notes}`:""}</div>`;
+      ${todayBP.length>1?`<div style="font-size:11px;color:var(--muted);margin-top:4px">Range: ${Math.min(...todayBP.map(b=>b.systolic))}–${Math.max(...todayBP.map(b=>b.systolic))} systolic</div>`:""}`;
   }
+  renderBPPatterns();
   renderBPChart();
   const hist=document.getElementById("bp-history-card");const list=document.getElementById("bp-history-list");
   if(S.allBpLogs.length){
     hist.classList.remove("hidden");
-    list.innerHTML=S.allBpLogs.slice(0,25).map(b=>{
+    list.innerHTML=S.allBpLogs.slice(0,30).map(b=>{
       const st=getBPStatus(b.systolic,b.diastolic);
       return`<div class="log-entry" style="border-left-color:${st.color}66">
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -503,45 +848,335 @@ function renderBP(){
   }
 }
 
+function renderBPPatterns(){
+  const c=document.getElementById("bp-patterns");
+  if(S.allBpLogs.length<8){c.innerHTML="";return;}
+  const byTime={morning:[],afternoon:[],evening:[]};
+  S.allBpLogs.forEach(b=>{if(byTime[b.time_of_day])byTime[b.time_of_day].push(b);});
+  const avgs={};
+  Object.entries(byTime).forEach(([t,logs])=>{
+    if(logs.length>0)avgs[t]={sys:Math.round(logs.reduce((a,b)=>a+b.systolic,0)/logs.length),dia:Math.round(logs.reduce((a,b)=>a+b.diastolic,0)/logs.length),count:logs.length};
+  });
+  const times=Object.keys(avgs);if(times.length<1){c.innerHTML="";return;}
+  const insights=[];
+  if(times.length>=2){
+    const sorted=times.sort((a,b)=>avgs[a].sys-avgs[b].sys);
+    const lo=sorted[0];const hi=sorted[sorted.length-1];const diff=avgs[hi].sys-avgs[lo].sys;
+    if(diff>=5)insights.push(`Your ${hi} readings average ${diff} points higher than ${lo} (${avgs[hi].sys}/${avgs[hi].dia} vs ${avgs[lo].sys}/${avgs[lo].dia}).`);
+  }
+  if(avgs.morning){const st=getBPStatus(avgs.morning.sys,avgs.morning.dia);insights.push(`Morning average: <span style="color:${st.color};font-weight:600">${avgs.morning.sys}/${avgs.morning.dia}</span> across ${avgs.morning.count} readings.`);}
+  const now=new Date();const w1=new Date(now);w1.setDate(now.getDate()-7);const w2=new Date(now);w2.setDate(now.getDate()-14);
+  const recent=S.allBpLogs.filter(b=>new Date(b.date)>=w1);const prior=S.allBpLogs.filter(b=>new Date(b.date)>=w2&&new Date(b.date)<w1);
+  if(recent.length>=2&&prior.length>=2){
+    const rAvg=Math.round(recent.reduce((a,b)=>a+b.systolic,0)/recent.length);
+    const pAvg=Math.round(prior.reduce((a,b)=>a+b.systolic,0)/prior.length);
+    const delta=rAvg-pAvg;
+    if(Math.abs(delta)>=3)insights.push(`Week-over-week: <span style="color:${delta<0?"var(--green)":"var(--red)"};font-weight:600">${delta<0?"⬇ Down":"⬆ Up"} ${Math.abs(delta)} pts</span> systolic vs prior week.`);
+  }
+  c.innerHTML=insights.map(txt=>`<div class="insight-card"><div style="font-size:20px;margin-bottom:6px">📊</div><div>${txt}</div></div>`).join("");
+}
+
 function renderBPChart(){
-  const logs=[...S.allBpLogs].reverse().slice(-14);
-  if(logs.length<2){document.getElementById("bp-chart").innerHTML=`<div style="color:var(--muted);font-size:11px;padding:10px 0">Log more readings to see your trend</div>`;return;}
-  const W=Math.max(320,logs.length*40);const H=110;const pad={t:10,b:22,l:34,r:10};
-  const sysVals=logs.map(l=>l.systolic);const diaVals=logs.map(l=>l.diastolic);
-  const minV=Math.min(...diaVals)-10;const maxV=Math.max(...sysVals)+10;
-  const xS=i=>pad.l+(i/(logs.length-1))*(W-pad.l-pad.r);
+  const dailyAvgs=getDailyBPAvg(S.allBpLogs).slice(-14);
+  if(dailyAvgs.length<2){document.getElementById("bp-chart").innerHTML=`<div style="color:var(--muted);font-size:11px;padding:10px 0">Log more readings to see your trend chart</div>`;return;}
+  const W=Math.max(300,dailyAvgs.length*44);const H=110;const pad={t:10,b:22,l:36,r:10};
+  const sysVals=dailyAvgs.map(d=>d.sys);const diaVals=dailyAvgs.map(d=>d.dia);
+  const minV=Math.min(...diaVals,80)-8;const maxV=Math.max(...sysVals,120)+8;
+  const xS=i=>pad.l+(i/(dailyAvgs.length-1))*(W-pad.l-pad.r);
   const yS=v=>pad.t+(1-(v-minV)/(maxV-minV))*(H-pad.t-pad.b);
-  const sysPath=logs.map((l,i)=>`${i===0?"M":"L"}${xS(i).toFixed(1)},${yS(l.systolic).toFixed(1)}`).join(" ");
-  const diaPath=logs.map((l,i)=>`${i===0?"M":"L"}${xS(i).toFixed(1)},${yS(l.diastolic).toFixed(1)}`).join(" ");
-  const y120=yS(120);const y80=yS(80);
+  const sysPath=dailyAvgs.map((d,i)=>`${i===0?"M":"L"}${xS(i).toFixed(1)},${yS(d.sys).toFixed(1)}`).join(" ");
+  const diaPath=dailyAvgs.map((d,i)=>`${i===0?"M":"L"}${xS(i).toFixed(1)},${yS(d.dia).toFixed(1)}`).join(" ");
   document.getElementById("bp-chart").innerHTML=`
     <svg width="${W}" height="${H}" style="display:block;overflow:visible">
-      <line x1="${pad.l}" y1="${y120}" x2="${W-pad.r}" y2="${y120}" stroke="#22c55e33" stroke-width="1" stroke-dasharray="3,3"/>
-      <line x1="${pad.l}" y1="${y80}" x2="${W-pad.r}" y2="${y80}" stroke="#22c55e33" stroke-width="1" stroke-dasharray="3,3"/>
-      <text x="${pad.l-4}" y="${y120+4}" text-anchor="end" font-size="8" fill="#22c55e66">120</text>
-      <text x="${pad.l-4}" y="${y80+4}" text-anchor="end" font-size="8" fill="#22c55e66">80</text>
-      <path d="${sysPath}" fill="none" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
-      <path d="${diaPath}" fill="none" stroke="#4f72ff" stroke-width="2" stroke-linejoin="round"/>
-      ${logs.map((l,i)=>{const st=getBPStatus(l.systolic,l.diastolic);return`<circle cx="${xS(i).toFixed(1)}" cy="${yS(l.systolic).toFixed(1)}" r="3" fill="${st.color}"/><circle cx="${xS(i).toFixed(1)}" cy="${yS(l.diastolic).toFixed(1)}" r="3" fill="${st.color}"/>`;}).join("")}
-      ${logs.filter((_,i)=>i%Math.ceil(logs.length/5)===0||i===logs.length-1).map(l=>{const i=logs.indexOf(l);return`<text x="${xS(i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="8" fill="#4a5270">${fmtDate(l.date)}</text>`;}).join("")}
+      <line x1="${pad.l}" y1="${yS(120)}" x2="${W-pad.r}" y2="${yS(120)}" stroke="#22c55e33" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="${pad.l}" y1="${yS(80)}" x2="${W-pad.r}" y2="${yS(80)}" stroke="#22c55e33" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="${pad.l-4}" y="${yS(120)+4}" text-anchor="end" font-size="8" fill="#22c55e77">120</text>
+      <text x="${pad.l-4}" y="${yS(80)+4}" text-anchor="end" font-size="8" fill="#22c55e77">80</text>
+      <path d="${sysPath}" fill="none" stroke="#ef4444" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="${diaPath}" fill="none" stroke="#4f72ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dailyAvgs.map((d,i)=>{const st=getBPStatus(d.sys,d.dia);return`<circle cx="${xS(i).toFixed(1)}" cy="${yS(d.sys).toFixed(1)}" r="3.5" fill="${st.color}"/><circle cx="${xS(i).toFixed(1)}" cy="${yS(d.dia).toFixed(1)}" r="3.5" fill="${st.color}"/>`;}).join("")}
+      ${dailyAvgs.filter((_,i)=>i%Math.max(1,Math.ceil(dailyAvgs.length/5))===0||i===dailyAvgs.length-1).map(d=>{const i=dailyAvgs.indexOf(d);return`<text x="${xS(i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="8" fill="#4a5270">${fmtDate(d.date)}</text>`;}).join("")}
     </svg>
     <div style="display:flex;gap:16px;margin-top:6px;font-size:10px;color:var(--muted)">
       <span><span style="color:#ef4444">—</span> Systolic</span>
       <span><span style="color:#4f72ff">—</span> Diastolic</span>
-      <span><span style="color:#22c55e55">- -</span> Target (120/80)</span>
+      <span style="margin-left:auto">Daily averages</span>
     </div>`;
 }
 
 async function logBP(){
   const sys=document.getElementById("bp-sys").value;const dia=document.getElementById("bp-dia").value;
   if(!sys||!dia)return;const btn=document.getElementById("bp-btn-txt");btn.innerHTML=spinner();
-  await api.insert("bp_logs",{date:today(),systolic:+sys,diastolic:+dia,time_of_day:document.getElementById("bp-time").value,notes:document.getElementById("bp-notes").value,logged_at:nowISO()});
+  await api.insert("bp_logs",{date:today(),systolic:+sys,diastolic:+dia,time_of_day:document.getElementById("bp-time").value,notes:document.getElementById("bp-notes").value||"",logged_at:nowISO()});
   document.getElementById("bp-sys").value="";document.getElementById("bp-dia").value="";document.getElementById("bp-notes").value="";
   btn.textContent="✓ Saved";setTimeout(()=>{btn.textContent="Log Reading";},2000);await loadAll();
 }
 
-// FOOD
-function getTodayTotals(){return S.foodLogs.reduce((a,f)=>({cal:a.cal+(f.calories||0),protein:a.protein+(f.protein||0),carbs:a.carbs+(f.carbs||0),fat:a.fat+(f.fat||0),sodium:a.sodium+(f.sodium||0)}),{cal:0,protein:0,carbs:0,fat:0,sodium:0});}
+// ── FOOD MODE TOGGLE ──────────────────────────────────────────
+function setFoodMode(mode){
+  ["db","ai","scan"].forEach(m=>{
+    document.getElementById(`mode-${m}`).classList.toggle("hidden",m!==mode);
+    const btn=document.getElementById(`mode-${m}-btn`);
+    btn.classList.toggle("btn-ghost",m!==mode);
+    btn.classList.toggle("btn",true);
+  });
+  if(mode!=="scan")stopScanner();
+}
+
+// ── FOOD DATABASE SEARCH ──────────────────────────────────────
+function searchFoodDB(q){
+  const res=document.getElementById("db-results");
+  if(!q||q.trim().length<2){res.classList.add("hidden");return;}
+  const matches=FOOD_DB.filter(f=>f.n.toLowerCase().includes(q.toLowerCase())).slice(0,12);
+  if(!matches.length){res.innerHTML=`<div style="padding:10px 12px;font-size:12px;color:var(--muted)">No matches — try AI mode for custom items</div>`;res.classList.remove("hidden");return;}
+  res.innerHTML=matches.map((f,i)=>`
+    <div class="food-suggestion" onclick="selectDBFood(${i},'${q}')">
+      <div style="color:var(--text)">${f.n}</div>
+      <div style="color:var(--muted);font-size:10px;margin-top:2px">${f.cal} cal · ${f.p}g P · ${f.s}mg Na · per ${f.srv}</div>
+    </div>`).join("");
+  res.classList.remove("hidden");
+  // Store matches for selection
+  res._matches=matches;
+}
+
+function selectDBFood(idx,q){
+  const res=document.getElementById("db-results");
+  const food=res._matches?res._matches[idx]:FOOD_DB.filter(f=>f.n.toLowerCase().includes(q.toLowerCase()))[idx];
+  if(!food)return;
+  S.dbSelected=food;S.dbPortion=1;
+  document.getElementById("db-results").classList.add("hidden");
+  document.getElementById("db-search").value=food.n;
+  document.getElementById("db-selected").classList.remove("hidden");
+  document.getElementById("db-selected-name").textContent=food.n;
+  document.getElementById("db-selected-per").textContent=`Per serving: ${food.srv}`;
+  updateDBPortionDisplay();
+}
+
+function updateDBPortionDisplay(){
+  if(!S.dbSelected)return;
+  const f=S.dbSelected;const p=S.dbPortion;
+  document.getElementById("db-portion-val").textContent=p%1===0?p:p.toFixed(1);
+  document.getElementById("db-adjusted-macros").innerHTML=
+    `${Math.round(f.cal*p)} cal · ${Math.round(f.p*p)}g P · ${Math.round(f.c*p)}g C · ${Math.round(f.f*p)}g F · ${Math.round(f.s*p)}mg Na`;
+}
+
+function changePortionDB(delta){
+  S.dbPortion=Math.max(0.5,+(S.dbPortion+delta).toFixed(1));
+  updateDBPortionDisplay();
+}
+
+async function logDBFood(){
+  if(!S.dbSelected)return;
+  const f=S.dbSelected;const p=S.dbPortion;
+  const meal=document.getElementById("food-meal-db").value;
+  await api.insert("food_logs",{date:today(),meal,description:`${f.n}${p!==1?` (${p}x)`:""}`,calories:Math.round(f.cal*p),protein:Math.round(f.p*p),carbs:Math.round(f.c*p),fat:Math.round(f.f*p),sodium:Math.round(f.s*p),logged_at:nowISO()});
+  await saveToRecent(f.n,{calories:Math.round(f.cal*p),protein:Math.round(f.p*p),carbs:Math.round(f.c*p),fat:Math.round(f.f*p),sodium:Math.round(f.s*p)});
+  document.getElementById("db-search").value="";document.getElementById("db-selected").classList.add("hidden");S.dbSelected=null;S.dbPortion=1;
+  await loadAll();
+}
+
+// ── AI FOOD ANALYSIS ──────────────────────────────────────────
+async function analyzeFood(){
+  const desc=document.getElementById("food-desc").value.trim();if(!desc)return;
+  const btn=document.getElementById("analyze-btn");btn.innerHTML=`${spinner()} Analyzing...`;btn.disabled=true;
+  document.getElementById("food-result").classList.add("hidden");
+  try{
+    const res=await fetch(AI_WORKER,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        system:`You are a precise nutrition analyst. Analyze food descriptions including brand names. Respond ONLY with valid JSON, no markdown. Format: {"foods":[{"name":"string","calories":number,"protein":number,"carbs":number,"fat":number,"sodium":number}],"totals":{"calories":number,"protein":number,"carbs":number,"fat":number,"sodium":number},"notes":"brief string"}`,
+        messages:[{role:"user",content:`Analyze and estimate macros + sodium in mg per serving: "${desc}"`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.find(c=>c.type==="text")?.text||"";
+    const parsed=JSON.parse(text.replace(/```json|```/g,"").trim());
+    renderAIResult(parsed,desc);
+  }catch(e){
+    document.getElementById("food-result").innerHTML=`<div style="color:var(--red);font-size:12px;padding:8px">Analysis failed — check your connection or try the Search tab</div>`;
+    document.getElementById("food-result").classList.remove("hidden");
+  }
+  btn.innerHTML="✦ Analyze with AI";btn.disabled=false;
+}
+
+// AI result state
+let _aiResult=null;let _aiPortion=1;let _aiDesc="";
+
+function renderAIResult(data,desc){
+  _aiResult=data;_aiPortion=1;_aiDesc=desc;
+  showAIResult();
+}
+
+function showAIResult(){
+  if(!_aiResult)return;
+  const t=_aiResult.totals;const p=_aiPortion;
+  const sodColor=(t.sodium*p)>800?"var(--red)":"var(--sodium)";
+  document.getElementById("food-result").innerHTML=`
+    <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
+      <span class="lbl">AI Estimate</span>
+      ${(_aiResult.foods||[]).map(f=>`<div style="font-size:11px;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:4px;line-height:1.5"><span style="color:var(--text)">${f.name}</span><br>${f.calories} cal · ${f.protein}g P · ${f.sodium}mg Na per serving</div>`).join("")}
+      <span class="lbl" style="margin-top:10px">Servings</span>
+      <div class="portion-stepper">
+        <div class="portion-btn" onclick="changeAIPortion(-0.5)">−</div>
+        <div class="portion-val" id="ai-portion-val">${_aiPortion}</div>
+        <div class="portion-btn" onclick="changeAIPortion(0.5)">+</div>
+        <div style="font-size:11px;color:var(--muted)">servings</div>
+      </div>
+      <div class="grid5" style="margin-top:10px">
+        <div style="text-align:center"><div style="color:var(--cal);font-size:16px;font-weight:600">${Math.round(t.calories*p)}</div><div style="font-size:9px;color:var(--muted)">Cal</div></div>
+        <div style="text-align:center"><div style="color:var(--protein);font-size:16px;font-weight:600">${Math.round(t.protein*p)}g</div><div style="font-size:9px;color:var(--muted)">Prot</div></div>
+        <div style="text-align:center"><div style="color:var(--carbs);font-size:16px;font-weight:600">${Math.round(t.carbs*p)}g</div><div style="font-size:9px;color:var(--muted)">Carb</div></div>
+        <div style="text-align:center"><div style="color:var(--fat);font-size:16px;font-weight:600">${Math.round(t.fat*p)}g</div><div style="font-size:9px;color:var(--muted)">Fat</div></div>
+        <div style="text-align:center"><div style="color:${sodColor};font-size:16px;font-weight:600">${Math.round(t.sodium*p)}mg</div><div style="font-size:9px;color:var(--muted)">Na</div></div>
+      </div>
+      ${(t.sodium*p)>800?`<div style="font-size:10px;color:var(--orange);margin-top:8px">⚠ High sodium — watch your ${S.goals.sodium}mg target</div>`:""}
+      ${_aiResult.notes?`<div style="font-size:10px;color:var(--muted);margin-top:6px;font-style:italic">${_aiResult.notes}</div>`:""}
+      <button class="btn btn-green" style="margin-top:12px" onclick="logAIFood()">Save to Log</button>
+    </div>`;
+  document.getElementById("food-result").classList.remove("hidden");
+}
+
+function changeAIPortion(delta){
+  _aiPortion=Math.max(0.5,+(_aiPortion+delta).toFixed(1));
+  showAIResult();
+}
+
+async function logAIFood(){
+  if(!_aiResult)return;
+  const t=_aiResult.totals;const p=_aiPortion;
+  const meal=document.getElementById("food-meal-ai").value;
+  const desc=_aiDesc+(p!==1?` (${p}x)`:"");
+  await api.insert("food_logs",{date:today(),meal,description:desc,calories:Math.round(t.calories*p),protein:Math.round(t.protein*p),carbs:Math.round(t.carbs*p),fat:Math.round(t.fat*p),sodium:Math.round(t.sodium*p),logged_at:nowISO()});
+  await saveToRecent(_aiDesc.substring(0,60),{calories:Math.round(t.calories*p),protein:Math.round(t.protein*p),carbs:Math.round(t.carbs*p),fat:Math.round(t.fat*p),sodium:Math.round(t.sodium*p)});
+  document.getElementById("food-desc").value="";document.getElementById("food-result").classList.add("hidden");
+  _aiResult=null;_aiPortion=1;_aiDesc="";
+  await loadAll();
+}
+
+// ── BARCODE SCANNER ───────────────────────────────────────────
+async function toggleScanner(){
+  if(S.scannerActive){stopScanner();return;}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+    S.scannerStream=stream;S.scannerActive=true;
+    const video=document.getElementById("scanner-video");
+    video.srcObject=stream;
+    document.getElementById("scanner-wrap").classList.remove("hidden");
+    document.getElementById("scan-btn").textContent="📷 Scanning...";
+    document.getElementById("scan-stop-btn").classList.remove("hidden");
+    if("BarcodeDetector" in window){
+      const detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128","code_39"]});
+      S.scannerInterval=setInterval(async()=>{
+        try{const barcodes=await detector.detect(video);if(barcodes.length>0){stopScanner();await lookupBarcode(barcodes[0].rawValue);}}catch(e){}
+      },600);
+    }else{
+      stopScanner();
+      const code=prompt("Camera barcode detection not supported.\nEnter barcode number manually:");
+      if(code&&code.trim())await lookupBarcode(code.trim());
+    }
+  }catch(e){
+    stopScanner();
+    document.getElementById("scanner-result").innerHTML=`<div style="color:var(--orange);font-size:12px;padding:8px 0">Camera access denied — allow camera access and try again.</div>`;
+    document.getElementById("scanner-result").classList.remove("hidden");
+  }
+}
+
+function stopScanner(){
+  if(S.scannerStream){S.scannerStream.getTracks().forEach(t=>t.stop());S.scannerStream=null;}
+  if(S.scannerInterval){clearInterval(S.scannerInterval);S.scannerInterval=null;}
+  S.scannerActive=false;
+  document.getElementById("scanner-wrap").classList.add("hidden");
+  document.getElementById("scan-btn").textContent="📷 Start Scanner";
+  document.getElementById("scan-stop-btn").classList.add("hidden");
+}
+
+let _scanResult=null;let _scanPortion=1;
+
+async function lookupBarcode(code){
+  const rd=document.getElementById("scanner-result");
+  rd.innerHTML=`<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:8px 0">${spinner()} Looking up ${code}...</div>`;
+  rd.classList.remove("hidden");
+  try{
+    const res=await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
+    const data=await res.json();
+    if(data.status===0||!data.product){
+      rd.innerHTML=`<div style="color:var(--orange);font-size:12px;padding:8px 0">Product not found — try Search or AI mode instead.</div>`;
+      return;
+    }
+    const pr=data.product;const n=pr.nutriments||{};
+    const name=pr.product_name||"Scanned Product";
+    const srv=pr.serving_size||"100g";
+    _scanResult={name,serving:srv,cal:Math.round(n["energy-kcal_serving"]||n["energy-kcal_100g"]||0),protein:+(n["proteins_serving"]||n["proteins_100g"]||0).toFixed(1),carbs:+(n["carbohydrates_serving"]||n["carbohydrates_100g"]||0).toFixed(1),fat:+(n["fat_serving"]||n["fat_100g"]||0).toFixed(1),sodium:Math.round((n["sodium_serving"]||n["sodium_100g"]||0)*1000)};
+    _scanPortion=1;
+    showScanResult();
+  }catch(e){rd.innerHTML=`<div style="color:var(--red);font-size:12px;padding:8px 0">Lookup failed — check connection.</div>`;}
+}
+
+function showScanResult(){
+  if(!_scanResult)return;
+  const r=_scanResult;const p=_scanPortion;
+  const sodColor=(r.sodium*p)>800?"var(--red)":"var(--sodium)";
+  document.getElementById("scanner-result").innerHTML=`
+    <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);margin-top:8px">
+      <div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:2px">${r.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:12px">Per serving: ${r.serving}</div>
+      <span class="lbl">Servings</span>
+      <div class="portion-stepper">
+        <div class="portion-btn" onclick="changeScanPortion(-0.5)">−</div>
+        <div class="portion-val" id="scan-portion-val">${_scanPortion%1===0?_scanPortion:_scanPortion.toFixed(1)}</div>
+        <div class="portion-btn" onclick="changeScanPortion(0.5)">+</div>
+        <div style="font-size:11px;color:var(--muted)">servings</div>
+      </div>
+      <div class="grid5" style="margin-top:10px">
+        <div style="text-align:center"><div style="color:var(--cal);font-size:16px;font-weight:600">${Math.round(r.cal*p)}</div><div style="font-size:9px;color:var(--muted)">Cal</div></div>
+        <div style="text-align:center"><div style="color:var(--protein);font-size:16px;font-weight:600">${Math.round(r.protein*p)}g</div><div style="font-size:9px;color:var(--muted)">Prot</div></div>
+        <div style="text-align:center"><div style="color:var(--carbs);font-size:16px;font-weight:600">${Math.round(r.carbs*p)}g</div><div style="font-size:9px;color:var(--muted)">Carb</div></div>
+        <div style="text-align:center"><div style="color:var(--fat);font-size:16px;font-weight:600">${Math.round(r.fat*p)}g</div><div style="font-size:9px;color:var(--muted)">Fat</div></div>
+        <div style="text-align:center"><div style="color:${sodColor};font-size:16px;font-weight:600">${Math.round(r.sodium*p)}mg</div><div style="font-size:9px;color:var(--muted)">Na</div></div>
+      </div>
+      ${(r.sodium*p)>800?`<div style="font-size:10px;color:var(--orange);margin-top:8px">⚠ High sodium</div>`:""}
+      <button class="btn btn-green" style="margin-top:12px" onclick="logScanFood()">Save to Log</button>
+    </div>`;
+  document.getElementById("scanner-result").classList.remove("hidden");
+}
+
+function changeScanPortion(delta){
+  _scanPortion=Math.max(0.5,+(_scanPortion+delta).toFixed(1));
+  showScanResult();
+}
+
+async function logScanFood(){
+  if(!_scanResult)return;
+  const r=_scanResult;const p=_scanPortion;
+  const meal=document.getElementById("food-meal-scan").value;
+  await api.insert("food_logs",{date:today(),meal,description:r.name+(p!==1?` (${p}x)`:""),calories:Math.round(r.cal*p),protein:Math.round(r.protein*p),carbs:Math.round(r.carbs*p),fat:Math.round(r.fat*p),sodium:Math.round(r.sodium*p),logged_at:nowISO()});
+  await saveToRecent(r.name,{calories:Math.round(r.cal*p),protein:Math.round(r.protein*p),carbs:Math.round(r.carbs*p),fat:Math.round(r.fat*p),sodium:Math.round(r.sodium*p)});
+  document.getElementById("scanner-result").classList.add("hidden");
+  _scanResult=null;_scanPortion=1;await loadAll();
+}
+
+// ── RECENT FOODS ──────────────────────────────────────────────
+async function saveToRecent(name,totals){
+  const existing=S.savedFoods.find(f=>f.name&&f.name.toLowerCase()===name.toLowerCase());
+  if(existing)await api.update("saved_foods",existing.id,{use_count:(existing.use_count||1)+1,last_used:nowISO()});
+  else await api.insert("saved_foods",{name,calories:totals.calories,protein:totals.protein,carbs:totals.carbs,fat:totals.fat,sodium:totals.sodium,last_used:nowISO()});
+}
+
+async function quickLogRecent(id){
+  const food=S.savedFoods.find(f=>f.id===id);if(!food)return;
+  const meal=document.getElementById("food-meal-db").value;
+  await api.insert("food_logs",{date:today(),meal,description:food.name,calories:food.calories,protein:food.protein,carbs:food.carbs,fat:food.fat,sodium:food.sodium,logged_at:nowISO()});
+  await api.update("saved_foods",id,{use_count:(food.use_count||1)+1,last_used:nowISO()});
+  await loadAll();
+}
+
+// ── FOOD RENDER ───────────────────────────────────────────────
+function getTodayTotals(){
+  return S.foodLogs.reduce((a,f)=>({cal:a.cal+(f.calories||0),protein:a.protein+(f.protein||0),carbs:a.carbs+(f.carbs||0),fat:a.fat+(f.fat||0),sodium:a.sodium+(f.sodium||0)}),{cal:0,protein:0,carbs:0,fat:0,sodium:0});
+}
 
 function renderFood(){
   const t=getTodayTotals();const g=S.goals;
@@ -552,67 +1187,40 @@ function renderFood(){
     ["var(--fat)","Fat",Math.round(t.fat),70,"g"],
   ].map(([c,n,v,m,u])=>`<div><span class="lbl">${n}</span><div style="color:${c};font-size:20px;font-weight:600">${v}${u}</div>${bar(v,m,c)}</div>`).join("");
   const sodColor=t.sodium>g.sodium?"var(--red)":"var(--sodium)";
-  document.getElementById("sodium-section").innerHTML=`<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--muted)">Sodium</span><span style="color:${sodColor}">${Math.round(t.sodium)}mg / ${g.sodium}mg</span></div>${bar(t.sodium,g.sodium,sodColor)}${t.sodium>g.sodium?`<div style="font-size:10px;color:var(--red);margin-top:4px">⚠ Over sodium target — watch BP</div>`:""}`;
+  document.getElementById("sodium-section").innerHTML=`<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--muted)">Sodium</span><span style="color:${sodColor}">${Math.round(t.sodium)}mg / ${g.sodium}mg</span></div>${bar(t.sodium,g.sodium,sodColor)}${t.sodium>g.sodium?`<div style="font-size:10px;color:var(--red);margin-top:4px">⚠ Over sodium target</div>`:""}`;
+
+  const rc=document.getElementById("recent-foods-card");const rl=document.getElementById("recent-foods-list");
+  if(S.savedFoods.length>0){
+    rc.classList.remove("hidden");
+    rl.innerHTML=S.savedFoods.slice(0,8).map(f=>`
+      <div class="recent-item" onclick="quickLogRecent(${f.id})">
+        <div><div style="color:var(--text)">${f.name}</div><div style="color:var(--muted);font-size:10px">${Math.round(f.calories)} cal · ${Math.round(f.protein)}g P · ${Math.round(f.sodium)}mg Na</div></div>
+        <span style="color:var(--accent);font-size:20px;padding-left:8px">+</span>
+      </div>`).join("");
+  }
+
   const mc=document.getElementById("today-meals-card");const ml=document.getElementById("today-meals-list");
   if(S.foodLogs.length){
     mc.classList.remove("hidden");
-    ml.innerHTML=S.foodLogs.map(f=>`<div class="log-entry" style="border-left-color:#4f72ff44">
-      <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-        <span style="color:#8fa8ff;text-transform:capitalize">${f.meal}</span>
-        <span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal)">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}</span>
-      </div>
-      <div style="color:var(--muted);font-size:11px">${f.description}</div>
-      <div style="color:#2a3050;font-size:10px;margin-top:2px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div>
-    </div>`).join("");
+    ml.innerHTML=S.foodLogs.map(f=>`
+      <div class="log-entry" style="border-left-color:#4f72ff44">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="color:#8fa8ff;text-transform:capitalize">${f.meal}</span>
+          <span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal)">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}</span>
+        </div>
+        <div style="color:var(--muted);font-size:11px">${f.description}</div>
+        <div style="color:#2a3050;font-size:10px;margin-top:2px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div>
+      </div>`).join("");
   }
 }
 
-async function analyzeFood(){
-  const desc=document.getElementById("food-desc").value.trim();if(!desc)return;
-  const btn=document.getElementById("analyze-btn");btn.innerHTML=`${spinner()} Analyzing...`;btn.disabled=true;
-  document.getElementById("food-result").classList.add("hidden");
-  try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:`You are a precise nutrition analyst. Respond ONLY with valid JSON, no markdown, no explanation. Format: {"foods":[{"name":"string","calories":number,"protein":number,"carbs":number,"fat":number,"sodium":number}],"totals":{"calories":number,"protein":number,"carbs":number,"fat":number,"sodium":number},"notes":"brief string"}`,messages:[{role:"user",content:`Analyze and estimate macros + sodium in mg: "${desc}"`}]})});
-    const data=await res.json();const text=data.content?.find(c=>c.type==="text")?.text||"";
-    const parsed=JSON.parse(text.replace(/```json|```/g,"").trim());
-    renderFoodResult(parsed);
-  }catch(e){document.getElementById("food-result").innerHTML=`<div style="color:var(--red);font-size:12px;padding:8px">Could not analyze — try rephrasing</div>`;document.getElementById("food-result").classList.remove("hidden");}
-  btn.innerHTML="✦ Analyze Macros";btn.disabled=false;
-}
-
-function renderFoodResult(data){
-  const t=data.totals;const sodColor=t.sodium>800?"var(--red)":"var(--sodium)";
-  document.getElementById("food-result").innerHTML=`
-    <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
-      <span class="lbl">Estimated Macros</span>
-      ${(data.foods||[]).map(f=>`<div style="font-size:11px;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:5px;margin-bottom:5px;line-height:1.5"><span style="color:var(--text)">${f.name}</span><br>${f.calories}cal · ${f.protein}g P · ${f.carbs}g C · ${f.fat}g F · ${f.sodium}mg Na</div>`).join("")}
-      <div class="grid5" style="margin-top:10px">
-        <div style="text-align:center"><div style="color:var(--cal);font-size:16px;font-weight:600">${t.calories}</div><div style="font-size:9px;color:var(--muted)">Cal</div></div>
-        <div style="text-align:center"><div style="color:var(--protein);font-size:16px;font-weight:600">${t.protein}g</div><div style="font-size:9px;color:var(--muted)">Prot</div></div>
-        <div style="text-align:center"><div style="color:var(--carbs);font-size:16px;font-weight:600">${t.carbs}g</div><div style="font-size:9px;color:var(--muted)">Carb</div></div>
-        <div style="text-align:center"><div style="color:var(--fat);font-size:16px;font-weight:600">${t.fat}g</div><div style="font-size:9px;color:var(--muted)">Fat</div></div>
-        <div style="text-align:center"><div style="color:${sodColor};font-size:16px;font-weight:600">${t.sodium}mg</div><div style="font-size:9px;color:var(--muted)">Na</div></div>
-      </div>
-      ${t.sodium>800?`<div style="font-size:10px;color:var(--orange);margin-top:8px">⚠ High sodium — factor into daily target</div>`:""}
-      ${data.notes?`<div style="font-size:10px;color:var(--muted);margin-top:6px;font-style:italic">${data.notes}</div>`:""}
-      <button class="btn btn-green" style="margin-top:12px" onclick='logFood(${JSON.stringify(t).replace(/'/g,"&#39;")})'>Save to Log</button>
-    </div>`;
-  document.getElementById("food-result").classList.remove("hidden");
-}
-
-async function logFood(totals){
-  const desc=document.getElementById("food-desc").value;const meal=document.getElementById("food-meal").value;
-  await api.insert("food_logs",{date:today(),meal,description:desc,calories:totals.calories,protein:totals.protein,carbs:totals.carbs,fat:totals.fat,sodium:totals.sodium,logged_at:nowISO()});
-  document.getElementById("food-desc").value="";document.getElementById("food-result").classList.add("hidden");await loadAll();
-}
-
-// WATER
+// ── WATER ─────────────────────────────────────────────────────
 function renderWater(){
   const glasses=S.waterLog?.glasses||0;const goal=S.goals.water_goal||12;
   document.getElementById("water-count").textContent=glasses;
   document.getElementById("water-goal-display").textContent=goal;
   document.getElementById("water-bubbles").innerHTML=Array.from({length:goal},(_,i)=>`<div class="water-bubble${i<glasses?" filled":""}" onclick="tapWater(${i})"></div>`).join("");
-  const tips=["Tap + to log a glass","Good start — keep sipping","Halfway there 💧","Almost at your goal!","Goal reached! 🎉"];
+  const tips=["Tap + to log a glass","Good start — keep sipping 💧","Halfway there!","Almost at goal!","Goal reached! 🎉"];
   document.getElementById("water-tip").textContent=tips[Math.min(Math.floor((glasses/goal)*5),4)];
 }
 async function tapWater(idx){await upsertWater(idx+1);}
@@ -624,7 +1232,7 @@ async function upsertWater(glasses){
   await loadAll();
 }
 
-// WORKOUT
+// ── WORKOUT ───────────────────────────────────────────────────
 function renderWorkout(){
   const todayW=S.workoutLogs.filter(w=>w.date===today());
   const totalMins=todayW.reduce((a,w)=>a+(w.duration||0),0);
@@ -633,71 +1241,78 @@ function renderWorkout(){
     card.classList.remove("hidden");card.style.borderColor="#22c55e33";
     card.innerHTML=`<span class="lbl">Today · ${totalMins} min total</span>${todayW.map(w=>`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">${w.duration} min</span>${ts(w.logged_at||w.created_at)}</span></div>`).join("")}${bar(totalMins,S.goals.active_minutes,"var(--green)")}<div style="font-size:10px;color:var(--muted);margin-top:4px">${totalMins} / ${S.goals.active_minutes} min goal</div>`;
   }
-  // Streak
   const wDates=[...new Set(S.allWorkoutLogs.map(w=>w.date))].sort().reverse();
-  let streak=0;for(let i=0;i<30;i++){const d=new Date();d.setDate(d.getDate()-i);if(wDates.includes(d.toLocaleDateString("en-CA")))streak++;else break;}
+  let streak=0;for(let i=0;i<60;i++){const d=new Date();d.setDate(d.getDate()-i);if(wDates.includes(d.toLocaleDateString("en-CA")))streak++;else break;}
   document.getElementById("workout-streak-content").innerHTML=`
     <div style="font-size:32px;font-family:Georgia,serif;font-weight:700;color:var(--green)">${streak} <span style="font-size:14px;color:var(--muted)">day streak</span></div>
     <div style="display:flex;gap:4px;margin-top:10px;align-items:center">
-      ${Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));const active=wDates.includes(d.toLocaleDateString("en-CA"));return`<div class="streak-dot" style="background:${active?"var(--green)":"var(--border)"}"></div>`;}).join("")}
+      ${Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return`<div class="streak-dot" style="background:${wDates.includes(d.toLocaleDateString("en-CA"))?"var(--green)":"var(--border)"}"></div>`;}).join("")}
       <span style="font-size:10px;color:var(--muted);margin-left:4px">last 7 days</span>
     </div>`;
   const hist=document.getElementById("workout-history-card");const list=document.getElementById("workout-history-list");
   if(S.allWorkoutLogs.length){
     hist.classList.remove("hidden");
-    list.innerHTML=S.allWorkoutLogs.slice(0,15).map(w=>`<div class="log-entry" style="border-left-color:#22c55e44">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="color:#8fa8ff">${w.type}</span>
-        <span style="color:var(--muted);font-size:11px">${fmtDate(w.date)} ${fmtTime(w.logged_at||w.created_at)} · ${w.duration}min</span>
-      </div>
-      ${w.notes?`<div style="color:var(--muted);font-size:11px">${w.notes}</div>`:""}
-    </div>`).join("");
+    list.innerHTML=S.allWorkoutLogs.slice(0,20).map(w=>`<div class="log-entry" style="border-left-color:#22c55e44"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="color:var(--muted);font-size:11px">${fmtDate(w.date)} ${fmtTime(w.logged_at||w.created_at)} · ${w.duration}min</span></div>${w.notes?`<div style="color:var(--muted);font-size:11px">${w.notes}</div>`:""}</div>`).join("");
   }
 }
-
 async function logWorkout(){
   const dur=document.getElementById("w-dur").value;if(!dur)return;
   const btn=document.getElementById("w-btn-txt");btn.innerHTML=spinner();
-  await api.insert("workout_logs",{date:today(),type:document.getElementById("w-type").value,duration:+dur,notes:document.getElementById("w-notes").value,logged_at:nowISO()});
+  await api.insert("workout_logs",{date:today(),type:document.getElementById("w-type").value,duration:+dur,notes:document.getElementById("w-notes").value||"",logged_at:nowISO()});
   document.getElementById("w-dur").value="";document.getElementById("w-notes").value="";
   btn.textContent="✓ Saved";setTimeout(()=>{btn.textContent="Log Workout";},2000);await loadAll();
 }
 
-// SODIUM LOOKUP
-const SODIUM_DB={"pizza (1 slice)":640,"deli turkey (2oz)":560,"soy sauce (1 tbsp)":879,"canned soup (1 cup)":890,"bread (2 slices)":280,"cottage cheese (1 cup)":800,"chicken breast grilled (6oz)":130,"salmon (6oz)":90,"eggs (2 large)":140,"oatmeal (1 cup)":115,"greek yogurt (1 cup)":65,"sweet potato (medium)":70,"broccoli (1 cup)":30,"banana":1,"almonds (1oz)":0,"avocado (half)":5,"brown rice (1 cup)":10,"restaurant burger":1000,"fast food fries":400,"canned beans (1 cup)":740,"hot dog":480,"bacon (3 strips)":580,"american cheese (1 slice)":430,"pickles (2 spears)":600,"ranch dressing (2 tbsp)":290,"rotisserie chicken (4oz)":480,"bagel":500,"protein bar":200,"sports drink (12oz)":160,"tomato sauce (1/2 cup)":480,"frozen meal":900,"chinese takeout (1 cup)":1200,"ramen (1 pack)":1500,"deli ham (2oz)":520,"pretzels (1oz)":385,"crackers (1oz)":200,"white bread (2 slices)":280,"miso soup (1 cup)":900,"teriyaki sauce (1 tbsp)":690};
-
+// ── SODIUM ────────────────────────────────────────────────────
+const SODIUM_DB_LOOKUP={"pizza (1 slice)":640,"deli turkey (2oz)":560,"soy sauce (1 tbsp)":879,"canned soup (1 cup)":890,"bread (2 slices)":280,"cottage cheese (1 cup)":800,"chicken breast (6oz)":130,"salmon (6oz)":90,"eggs (2)":140,"oatmeal (1 cup)":115,"greek yogurt (1 cup)":65,"sweet potato":70,"broccoli (1 cup)":30,"banana":1,"almonds (1oz)":0,"avocado (half)":5,"brown rice (1 cup)":10,"restaurant burger":1000,"fast food fries":400,"canned beans (1 cup)":740,"hot dog":480,"bacon (3 strips)":580,"american cheese (1 slice)":430,"pickles (2 spears)":600,"ranch dressing (2 tbsp)":290,"rotisserie chicken (4oz)":480,"bagel":500,"protein bar":200,"gatorade (20oz)":270,"tomato sauce (½ cup)":480,"frozen meal":900,"chinese takeout (1 cup)":1200,"ramen (1 pack)":1500,"deli ham (2oz)":520,"pretzels (1oz)":385,"miso soup (1 cup)":900,"teriyaki sauce (1 tbsp)":690,"chipotle burrito bowl":1400};
 function searchSodium(q){
   const res=document.getElementById("sodium-results");if(!q.trim()){res.innerHTML="";return;}
-  const matches=Object.entries(SODIUM_DB).filter(([k])=>k.includes(q.toLowerCase())).slice(0,8);
-  if(!matches.length){res.innerHTML=`<div style="font-size:12px;color:var(--muted);padding:8px">No matches — use the AI food analyzer for custom items</div>`;return;}
-  res.innerHTML=`<div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;overflow:hidden">${matches.map(([name,mg])=>{const pct=Math.round((mg/S.goals.sodium)*100);const color=mg>600?"var(--red)":mg>300?"var(--orange)":"var(--green)";return`<div class="sodium-item"><div style="display:flex;justify-content:space-between"><span style="color:var(--text)">${name}</span><span style="color:${color};font-weight:600">${mg}mg</span></div><div style="font-size:10px;color:var(--muted)">${pct}% of your ${S.goals.sodium}mg daily budget</div></div>`;}).join("")}</div>`;
+  const matches=Object.entries(SODIUM_DB_LOOKUP).filter(([k])=>k.includes(q.toLowerCase())).slice(0,8);
+  if(!matches.length){res.innerHTML=`<div style="font-size:12px;color:var(--muted);padding:8px">No matches — use AI food analyzer for custom items</div>`;return;}
+  res.innerHTML=`<div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;overflow:hidden">${matches.map(([name,mg])=>{const pct=Math.round((mg/S.goals.sodium)*100);const color=mg>600?"var(--red)":mg>300?"var(--orange)":"var(--green)";return`<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px"><div style="display:flex;justify-content:space-between"><span style="color:var(--text)">${name}</span><span style="color:${color};font-weight:600">${mg}mg</span></div><div style="font-size:10px;color:var(--muted)">${pct}% of your ${S.goals.sodium}mg daily budget</div></div>`;}).join("")}</div>`;
 }
-
 function renderSodiumPage(){
   const t=getTodayTotals();
   document.getElementById("sodium-target-display").textContent=`${S.goals.sodium}mg`;
   document.getElementById("sodium-used-display").textContent=`${Math.round(t.sodium)}mg`;
-  document.getElementById("sodium-watchlist").innerHTML=`<div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;overflow:hidden">${[["Ramen (1 pack)",1500],["Chinese takeout (1 cup)",1200],["Frozen meal",900],["Miso soup (1 cup)",900],["Canned soup (1 cup)",890],["Soy sauce (1 tbsp)",879],["Restaurant burger",1000],["Teriyaki sauce (1 tbsp)",690]].map(([n,mg])=>`<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between"><span style="color:var(--text)">${n}</span><span style="color:var(--red);font-weight:600">${mg}mg</span></div>`).join("")}</div>`;
-  document.getElementById("sodium-swaps").innerHTML=`🚫 Soy sauce → ✅ Lemon juice or herbs<br>🚫 Deli meat → ✅ Fresh grilled chicken<br>🚫 Canned soup → ✅ Homemade or low-sodium<br>🚫 Frozen meals → ✅ Meal prepped food<br>🚫 Table salt → ✅ Herbs, garlic, citrus<br>🚫 Restaurant → ✅ Cook at home`;
+  document.getElementById("sodium-watchlist").innerHTML=`<div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;overflow:hidden">${[["Ramen (1 pack)",1500],["Chipotle Burrito Bowl",1400],["Chinese Takeout (1 cup)",1200],["Restaurant Burger",1000],["Frozen Meal",900],["Miso Soup (1 cup)",900],["Canned Soup (1 cup)",890],["Soy Sauce (1 tbsp)",879]].map(([n,mg])=>`<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between"><span style="color:var(--text)">${n}</span><span style="color:var(--red);font-weight:600">${mg}mg</span></div>`).join("")}</div>`;
+  document.getElementById("sodium-swaps").innerHTML=`🚫 Soy sauce → ✅ Lemon juice or fresh herbs<br>🚫 Deli meat → ✅ Fresh grilled chicken<br>🚫 Canned soup → ✅ Homemade or low-sodium<br>🚫 Frozen meals → ✅ Meal prepped food<br>🚫 Table salt → ✅ Herbs, garlic, citrus<br>🚫 Restaurant → ✅ Cook at home`;
 }
 
-// HISTORY
+// ── HISTORY ───────────────────────────────────────────────────
 function renderHistory(){
   const filter=document.getElementById("history-filter")?.value||"food";
   const content=document.getElementById("history-content");
   if(filter==="food"){
     const byDate={};S.allFoodLogs.forEach(f=>{if(!byDate[f.date])byDate[f.date]=[];byDate[f.date].push(f);});
-    content.innerHTML=Object.keys(byDate).sort().reverse().slice(0,14).map(date=>`<div class="history-day"><div class="history-day-hdr">${fmtFull(date)}</div>${byDate[date].map(f=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:#8fa8ff;text-transform:capitalize;font-size:12px">${f.meal}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal);font-size:12px">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}</span></div><div style="color:var(--muted);font-size:11px">${f.description}</div><div style="color:#2a3050;font-size:10px;margin-top:4px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div></div>`).join("")}</div>`).join("");
+    content.innerHTML=Object.keys(byDate).sort().reverse().slice(0,14).map(date=>`
+      <div class="history-day">
+        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">${fmtFull(date)}</div>
+        ${byDate[date].map(f=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:#8fa8ff;text-transform:capitalize;font-size:12px">${f.meal}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal);font-size:12px">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}</span></div><div style="color:var(--muted);font-size:11px">${f.description}</div><div style="color:#2a3050;font-size:10px;margin-top:4px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div></div>`).join("")}
+      </div>`).join("");
   }else if(filter==="bp"){
-    content.innerHTML=S.allBpLogs.slice(0,40).map(b=>{const st=getBPStatus(b.systolic,b.diastolic);return`<div class="card" style="padding:12px;margin-bottom:8px;border-left:3px solid ${st.color}"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:${st.color};font-size:20px;font-weight:700">${b.systolic}/${b.diastolic}</span><div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${fmtFull(b.date)}</div><div style="font-size:11px;color:var(--muted)">${fmtTime(b.logged_at||b.created_at)} · ${b.time_of_day}</div></div></div>${b.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px">${b.notes}</div>`:""}</div>`;}).join("");
+    const byDate={};S.allBpLogs.forEach(b=>{if(!byDate[b.date])byDate[b.date]=[];byDate[b.date].push(b);});
+    content.innerHTML=Object.keys(byDate).sort().reverse().slice(0,30).map(date=>{
+      const readings=byDate[date];
+      const avgSys=Math.round(readings.reduce((a,b)=>a+b.systolic,0)/readings.length);
+      const avgDia=Math.round(readings.reduce((a,b)=>a+b.diastolic,0)/readings.length);
+      const st=getBPStatus(avgSys,avgDia);
+      return`<div class="card" style="padding:12px;margin-bottom:8px;border-left:3px solid ${st.color}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em">${fmtFull(date)} · Avg</div><span style="color:${st.color};font-size:22px;font-weight:700">${avgSys}/${avgDia}</span> <span class="tag" style="background:${st.color}22;color:${st.color}">${st.label}</span></div>
+          <div style="font-size:10px;color:var(--muted)">${readings.length} reading${readings.length>1?"s":""}</div>
+        </div>
+        ${readings.length>1?readings.map(b=>`<div style="font-size:11px;color:var(--muted);padding:3px 0;border-top:1px solid var(--border)">${b.systolic}/${b.diastolic} · ${b.time_of_day} · ${fmtTime(b.logged_at||b.created_at)}</div>`).join(""):""}
+      </div>`;
+    }).join("");
   }else if(filter==="workout"){
-    content.innerHTML=S.allWorkoutLogs.slice(0,30).map(w=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="color:var(--green);font-weight:600">${w.duration} min</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">${fmtFull(w.date)} · ${fmtTime(w.logged_at||w.created_at)}${w.notes?` · ${w.notes}`:""}</div></div>`).join("");
-  }else if(filter==="weight"){
-    content.innerHTML=S.weightLogs.map(w=>{const diff=S.goals.target_weight?+(w.weight-S.goals.target_weight).toFixed(1):null;return`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:24px;font-family:Georgia,serif;font-weight:700">${w.weight} lbs</span><div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${fmtFull(w.date)}</div><div style="font-size:11px;color:var(--muted)">${fmtTime(w.logged_at||w.created_at)}</div>${diff!==null?`<div style="font-size:11px;color:${diff>0?"var(--orange)":"var(--green)"}">${diff>0?"+":""}${diff} from goal</div>`:""}</div></div></div>`;}).join("");
+    content.innerHTML=S.allWorkoutLogs.slice(0,40).map(w=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="color:var(--green);font-weight:600">${w.duration} min</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">${fmtFull(w.date)} · ${fmtTime(w.logged_at||w.created_at)}${w.notes?` · ${w.notes}`:""}</div></div>`).join("");
+  }else{
+    content.innerHTML=S.weightLogs.map(w=>{const diff=+(w.weight-S.goals.target_weight).toFixed(1);return`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:24px;font-family:Georgia,serif;font-weight:700">${w.weight} lbs</span><div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${fmtFull(w.date)}</div><div style="font-size:11px;color:var(--muted)">${fmtTime(w.logged_at||w.created_at)}</div><div style="font-size:11px;color:${diff>0?"var(--orange)":"var(--green)"}">${diff>0?"+":""}${diff} from goal</div></div></div></div>`;}).join("");
   }
 }
 
-// WEEKLY REPORT
+// ── WEEKLY REPORT ─────────────────────────────────────────────
 function renderWeek(){
   const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return d.toLocaleDateString("en-CA");});
   const ws=days[0];const we=days[6];
@@ -714,7 +1329,6 @@ function renderWeek(){
   const avgProt=fDays?Math.round(weekF.reduce((a,f)=>a+(f.protein||0),0)/fDays):0;
   const avgSod=fDays?Math.round(weekF.reduce((a,f)=>a+(f.sodium||0),0)/fDays):0;
   const streak=S.checkin?.meds_streak||0;
-
   document.getElementById("week-header-card").innerHTML=`
     <div style="font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">${fmtFull(ws)} — ${fmtFull(we)}</div>
     <div class="grid3">
@@ -722,40 +1336,69 @@ function renderWeek(){
       <div style="text-align:center"><span class="lbl">Workout Days</span><div style="font-size:22px;font-weight:700;color:var(--green)">${wDays}<span style="font-size:12px;color:var(--muted)">/7</span></div></div>
       <div style="text-align:center"><span class="lbl">Meds Streak</span><div style="font-size:22px;font-weight:700;color:${streak>0?"var(--green)":"var(--red)"}">${streak}d</div></div>
     </div>`;
-
-  document.getElementById("week-bp-content").innerHTML=weekBP.length?
-    `${days.map(d=>{const r=weekBP.filter(b=>b.date===d).pop();if(!r)return`<div class="week-row"><span style="color:var(--muted)">${fmtFull(d)}</span><span style="color:#2a3050">—</span></div>`;const st=getBPStatus(r.systolic,r.diastolic);return`<div class="week-row"><span style="color:var(--muted)">${fmtFull(d)}</span><span style="color:${st.color};font-weight:600">${r.systolic}/${r.diastolic}</span><span>${ts(r.logged_at||r.created_at)}</span></div>`;}).join("")}${avgSys?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Weekly avg: <span style="color:${getBPStatus(avgSys,avgDia).color};font-weight:600">${avgSys}/${avgDia}</span></div>`:""}`:
-    `<div style="font-size:12px;color:var(--muted)">No readings this week</div>`;
-
-  document.getElementById("week-workouts-content").innerHTML=`${days.map(d=>{const ws2=weekW.filter(w=>w.date===d);const mins=ws2.reduce((a,w)=>a+(w.duration||0),0);return`<div class="week-row"><span style="color:var(--muted)">${fmtFull(d)}</span><span style="color:${mins>0?"var(--green)":"#2a3050"}">${mins>0?`${mins} min`:"rest"}</span>${ws2.length?`<span style="font-size:10px;color:var(--muted)">${ws2.map(w=>w.type).join(", ")}</span>`:""}</div>`;}).join("")}<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Total: <span style="color:var(--green)">${totalMins} min</span> · ${wDays} days active</div>`;
-
-  document.getElementById("week-nutrition-content").innerHTML=fDays?`<div class="grid3" style="margin-bottom:10px"><div style="text-align:center"><span class="lbl">Avg Cal</span><div style="font-size:18px;font-weight:600;color:var(--cal)">${avgCal}</div></div><div style="text-align:center"><span class="lbl">Avg Protein</span><div style="font-size:18px;font-weight:600;color:var(--protein)">${avgProt}g</div></div><div style="text-align:center"><span class="lbl">Avg Sodium</span><div style="font-size:18px;font-weight:600;color:${avgSod>S.goals.sodium?"var(--red)":"var(--sodium)"}">${avgSod}mg</div></div></div><div style="font-size:10px;color:var(--muted)">Logged ${fDays}/7 days</div>`:`<div style="font-size:12px;color:var(--muted)">No food logged this week</div>`;
-
-  if(weekWt.length){
-    document.getElementById("week-weight-card").classList.remove("hidden");
-    const first=weekWt[weekWt.length-1].weight;const last=weekWt[0].weight;const diff=(last-first).toFixed(1);
-    document.getElementById("week-weight-content").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><span class="lbl">Current</span><div style="font-size:24px;font-weight:700;font-family:Georgia,serif">${last} lbs</div></div><div style="text-align:right"><span class="lbl">Week Change</span><div style="font-size:20px;font-weight:600;color:${diff<0?"var(--green)":diff>0?"var(--orange)":"var(--muted)"}">${diff>0?"+":""}${diff} lbs</div></div></div><div style="font-size:11px;color:var(--muted)">${(last-S.goals.target_weight).toFixed(1)} lbs to goal (${S.goals.target_weight} lbs)</div>`;
-  }
-
+  const dailyBPAvgs=getDailyBPAvg(weekBP);
+  document.getElementById("week-bp-content").innerHTML=weekBP.length?`${days.map(d=>{const da=dailyBPAvgs.find(a=>a.date===d);if(!da)return`<div class="week-row"><span style="color:var(--muted)">${fmtFull(d)}</span><span style="color:#2a3050">—</span></div>`;const st=getBPStatus(da.sys,da.dia);return`<div class="week-row"><span style="color:var(--muted);flex:1">${fmtFull(d)}</span><span style="color:${st.color};font-weight:600">${da.sys}/${da.dia}</span><span class="tag" style="background:${st.color}22;color:${st.color}">${st.label}</span><span style="font-size:9px;color:var(--muted)">${da.count}x</span></div>`;}).join("")}${avgSys?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Weekly avg: <span style="color:${getBPStatus(avgSys,avgDia).color};font-weight:600">${avgSys}/${avgDia}</span></div>`:""}`:
+  `<div style="font-size:12px;color:var(--muted)">No readings this week</div>`;
+  document.getElementById("week-workouts-content").innerHTML=`${days.map(d=>{const ws2=weekW.filter(w=>w.date===d);const mins=ws2.reduce((a,w)=>a+(w.duration||0),0);return`<div class="week-row"><span style="color:var(--muted);flex:1">${fmtFull(d)}</span><span style="color:${mins>0?"var(--green)":"#2a3050"}">${mins>0?`${mins} min`:"rest"}</span>${ws2.length?`<span style="font-size:10px;color:var(--muted)">${ws2.map(w=>w.type).join(", ")}</span>`:""}</div>`;}).join("")}<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Total: <span style="color:var(--green)">${totalMins} min</span> · ${wDays} days active</div>`;
+  document.getElementById("week-nutrition-content").innerHTML=fDays?`<div class="grid3" style="margin-bottom:10px"><div style="text-align:center"><span class="lbl">Avg Cal</span><div style="font-size:18px;font-weight:600;color:var(--cal)">${avgCal}</div></div><div style="text-align:center"><span class="lbl">Avg Protein</span><div style="font-size:18px;font-weight:600;color:var(--protein)">${avgProt}g</div></div><div style="text-align:center"><span class="lbl">Avg Sodium</span><div style="font-size:18px;font-weight:600;color:${avgSod>S.goals.sodium?"var(--red)":"var(--sodium)"}">${avgSod}mg</div></div></div><div style="font-size:10px;color:var(--muted)">Logged ${fDays}/7 days</div>`:
+  `<div style="font-size:12px;color:var(--muted)">No food logged this week</div>`;
+  if(weekWt.length){document.getElementById("week-weight-card").classList.remove("hidden");const first=weekWt[weekWt.length-1].weight;const last=weekWt[0].weight;const diff=(last-first).toFixed(1);document.getElementById("week-weight-content").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><span class="lbl">Current</span><div style="font-size:24px;font-weight:700;font-family:Georgia,serif">${last} lbs</div></div><div style="text-align:right"><span class="lbl">Week Change</span><div style="font-size:20px;font-weight:600;color:${diff<0?"var(--green)":diff>0?"var(--orange)":"var(--muted)"}">${diff>0?"+":""}${diff} lbs</div></div></div><div style="font-size:11px;color:var(--muted)">${(last-S.goals.target_weight).toFixed(1)} lbs to goal (${S.goals.target_weight} lbs)</div>`;}
   document.getElementById("week-footer").innerHTML=`Target: ${S.goals.target_weight} lbs · Sodium &lt;${S.goals.sodium}mg/day · Off Losartan 4–6 months`;
 }
 
-// GOALS
+// ── EXPORT ────────────────────────────────────────────────────
+function exportReport(){
+  const days=+document.getElementById("export-range").value||30;
+  const btn=document.getElementById("export-btn-txt");btn.innerHTML=`${spinner()} Generating...`;
+  try{
+    const cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);const cutoffStr=cutoff.toLocaleDateString("en-CA");
+    const bpData=S.allBpLogs.filter(b=>b.date>=cutoffStr);
+    const foodData=S.allFoodLogs.filter(f=>f.date>=cutoffStr);
+    const workoutData=S.allWorkoutLogs.filter(w=>w.date>=cutoffStr);
+    const weightData=S.weightLogs.filter(w=>w.date>=cutoffStr);
+    const avgSys=bpData.length?Math.round(bpData.reduce((a,b)=>a+b.systolic,0)/bpData.length):0;
+    const avgDia=bpData.length?Math.round(bpData.reduce((a,b)=>a+b.diastolic,0)/bpData.length):0;
+    const streak=S.checkin?.meds_streak||0;
+    let csv=`HEALTH REPORT — Eric Powell\nGenerated: ${new Date().toLocaleDateString()}\nPeriod: Last ${days} days\n\n`;
+    csv+=`SUMMARY\nAverage BP,${avgSys}/${avgDia} mmHg\nCurrent Weight,${weightData[0]?.weight||"N/A"} lbs\nGoal Weight,${S.goals.target_weight} lbs\nTotal Workouts,${workoutData.length}\nTotal Active Minutes,${workoutData.reduce((a,w)=>a+(w.duration||0),0)}\nLosartan Streak,${streak} days\n\n`;
+    csv+=`BLOOD PRESSURE LOG\nDate,Time,Systolic,Diastolic,Time of Day,Status,Notes\n`;
+    bpData.forEach(b=>{const st=getBPStatus(b.systolic,b.diastolic);csv+=`${b.date},${fmtTime(b.logged_at||b.created_at)},${b.systolic},${b.diastolic},${b.time_of_day},${st.label},"${b.notes||""}"\n`;});
+    csv+=`\nDAILY BP AVERAGES\nDate,Avg Systolic,Avg Diastolic,Readings,Status\n`;
+    getDailyBPAvg(bpData).reverse().forEach(d=>{const st=getBPStatus(d.sys,d.dia);csv+=`${d.date},${d.sys},${d.dia},${d.count},${st.label}\n`;});
+    const byTime={morning:[],afternoon:[],evening:[]};bpData.forEach(b=>{if(byTime[b.time_of_day])byTime[b.time_of_day].push(b);});
+    csv+=`\nBP TIME-OF-DAY PATTERNS\nTime,Avg Systolic,Avg Diastolic,Readings\n`;
+    Object.entries(byTime).forEach(([time,logs])=>{if(logs.length){const s=Math.round(logs.reduce((a,b)=>a+b.systolic,0)/logs.length);const d=Math.round(logs.reduce((a,b)=>a+b.diastolic,0)/logs.length);csv+=`${time},${s},${d},${logs.length}\n`;}});
+    csv+=`\nFOOD LOG\nDate,Time,Meal,Description,Calories,Protein(g),Carbs(g),Fat(g),Sodium(mg)\n`;
+    foodData.forEach(f=>{csv+=`${f.date},${fmtTime(f.logged_at||f.created_at)},${f.meal},"${f.description}",${Math.round(f.calories||0)},${Math.round(f.protein||0)},${Math.round(f.carbs||0)},${Math.round(f.fat||0)},${Math.round(f.sodium||0)}\n`;});
+    csv+=`\nWORKOUT LOG\nDate,Time,Type,Duration(min),Notes\n`;
+    workoutData.forEach(w=>{csv+=`${w.date},${fmtTime(w.logged_at||w.created_at)},${w.type},${w.duration},"${w.notes||""}"\n`;});
+    csv+=`\nWEIGHT LOG\nDate,Time,Weight(lbs),vs Goal\n`;
+    weightData.forEach(w=>{const diff=(w.weight-S.goals.target_weight).toFixed(1);csv+=`${w.date},${fmtTime(w.logged_at||w.created_at)},${w.weight},${diff>0?"+":""}${diff}\n`;});
+    const blob=new Blob([csv],{type:"text/csv"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download=`health-report-eric-powell-${today()}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+    btn.textContent="✓ Downloaded";
+    document.getElementById("export-result").classList.remove("hidden");
+    document.getElementById("export-result").innerHTML=`<div style="background:#0d1f0d;border:1px solid #22c55e44;border-radius:8px;padding:12px;font-size:11px;color:var(--muted);line-height:1.7">✓ Report downloaded as CSV<br>Open in Excel or Numbers for the full view.<br>Attach to email to send to your VA doctor.</div>`;
+    setTimeout(()=>{btn.textContent="📤 Download Report (CSV)";},3000);
+  }catch(e){btn.textContent="Failed — Try Again";setTimeout(()=>{btn.textContent="📤 Download Report (CSV)";},3000);}
+}
+
+// ── GOALS ─────────────────────────────────────────────────────
 function renderGoals(){
   const g=S.goals;
   document.getElementById("g-cal").value=g.calories;document.getElementById("g-protein").value=g.protein;
   document.getElementById("g-sodium").value=g.sodium;document.getElementById("g-mins").value=g.active_minutes;
   document.getElementById("g-water").value=g.water_goal||12;document.getElementById("g-weight").value=g.target_weight;
 }
-
 async function saveGoals(){
   const updated={calories:+document.getElementById("g-cal").value,protein:+document.getElementById("g-protein").value,sodium:+document.getElementById("g-sodium").value,active_minutes:+document.getElementById("g-mins").value,water_goal:+document.getElementById("g-water").value,target_weight:+document.getElementById("g-weight").value};
   if(S.goals.id)await api.update("user_goals",S.goals.id,updated);
   S.goals={...S.goals,...updated};renderAll();showTab("week");
 }
 
+// ── INIT ──────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded",()=>{showTab("morning");loadAll();});
 </script>
-
 </body>
 </html>
