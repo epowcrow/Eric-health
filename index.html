@@ -495,6 +495,7 @@ const api={
   insert:(t,d)=>sb(t,{method:"POST",body:JSON.stringify(d)}),
   update:(t,id,d)=>sb(`${t}?id=eq.${id}`,{method:"PATCH",body:JSON.stringify(d)}),
   upsert:(t,d)=>sb(t,{method:"POST",prefer:"resolution=merge-duplicates,return=representation",body:JSON.stringify(d)}),
+  delete:(t,id)=>sb(`${t}?id=eq.${id}`,{method:"DELETE",prefer:""}),
 };
 
 // ── FOOD DATABASE (600+ items) ────────────────────────────────
@@ -840,7 +841,10 @@ function renderBP(){
       return`<div class="log-entry" style="border-left-color:${st.color}66">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <span style="color:${st.color};font-weight:600">${b.systolic}/${b.diastolic}</span>
-          <span style="color:var(--muted);font-size:11px">${fmtDate(b.date)} ${fmtTime(b.logged_at||b.created_at)} · ${b.time_of_day}</span>
+          <span style="display:flex;gap:8px;align-items:center">
+            <span style="color:var(--muted);font-size:11px">${fmtDate(b.date)} ${fmtTime(b.logged_at||b.created_at)} · ${b.time_of_day}</span>
+            <span onclick="deleteBP(${b.id})" style="color:var(--red);cursor:pointer;font-size:14px">🗑</span>
+          </span>
         </div>
         ${b.notes?`<div style="color:var(--muted);font-size:11px">${b.notes}</div>`:""}
       </div>`;
@@ -920,7 +924,11 @@ function setFoodMode(mode){
     btn.classList.toggle("btn-ghost",m!==mode);
     btn.classList.toggle("btn",true);
   });
-  if(mode!=="scan")stopScanner();
+  if(mode!=="scan"){
+    stopScanner();
+    document.getElementById("scanner-result").classList.add("hidden");
+    document.getElementById("scanner-result").innerHTML="";
+  }
 }
 
 // ── FOOD DATABASE SEARCH ──────────────────────────────────────
@@ -1069,26 +1077,37 @@ async function logAIFood(){
 // ── BARCODE SCANNER ───────────────────────────────────────────
 async function toggleScanner(){
   if(S.scannerActive){stopScanner();return;}
-  // Check if BarcodeDetector is available (Chrome Android)
-  if("BarcodeDetector" in window){
-    try{
-      const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
-      S.scannerStream=stream;S.scannerActive=true;
-      const video=document.getElementById("scanner-video");
-      video.srcObject=stream;
-      document.getElementById("scanner-wrap").classList.remove("hidden");
-      document.getElementById("scan-btn").textContent="📷 Scanning...";
-      document.getElementById("scan-stop-btn").classList.remove("hidden");
+  const rd=document.getElementById("scanner-result");
+  rd.innerHTML=`<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:8px 0">${spinner()} Starting camera...</div>`;
+  rd.classList.remove("hidden");
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}}});
+    S.scannerStream=stream;S.scannerActive=true;
+    const video=document.getElementById("scanner-video");
+    video.srcObject=stream;
+    await video.play();
+    document.getElementById("scanner-wrap").classList.remove("hidden");
+    document.getElementById("scan-btn").textContent="⏹ Stop Camera";
+    document.getElementById("scan-stop-btn").classList.remove("hidden");
+    rd.innerHTML=`<div style="font-size:11px;color:var(--muted);padding:6px 0">Point camera at barcode — or <span onclick="stopScanner();showManualBarcodeEntry()" style="color:var(--accent);cursor:pointer;text-decoration:underline">enter manually</span></div>`;
+    if("BarcodeDetector" in window){
       const detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128","code_39"]});
       S.scannerInterval=setInterval(async()=>{
-        try{const barcodes=await detector.detect(video);if(barcodes.length>0){stopScanner();await lookupBarcode(barcodes[0].rawValue);}}catch(e){}
+        try{
+          const barcodes=await detector.detect(video);
+          if(barcodes.length>0){stopScanner();await lookupBarcode(barcodes[0].rawValue);}
+        }catch(e){}
       },600);
-    }catch(e){
-      stopScanner();
-      showManualBarcodeEntry();
+    }else{
+      // Camera works but no BarcodeDetector — show both camera feed and manual entry
+      rd.innerHTML=`<div style="font-size:11px;color:var(--muted);padding:6px 0;line-height:1.6">📱 Auto-scan not supported in Safari.<br>Read the barcode number from the label and enter below:</div>
+        <input type="number" id="manual-barcode-input" placeholder="e.g. 049000042566" style="margin:8px 0 8px">
+        <button class="btn" onclick="submitManualBarcode()">Look Up Product</button>`;
+      rd.classList.remove("hidden");
     }
-  }else{
-    // iPhone Safari — show clean manual entry UI
+  }catch(e){
+    stopScanner();
+    // Camera denied or unavailable — show clean manual entry
     showManualBarcodeEntry();
   }
 }
@@ -1098,7 +1117,6 @@ function showManualBarcodeEntry(){
   rd.innerHTML=`
     <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:8px">
       <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">
-        📱 On iPhone, camera scanning isn't supported in Safari.<br>
         Enter the barcode number from the product label:
       </div>
       <input type="number" id="manual-barcode-input" placeholder="e.g. 049000042566" style="margin-bottom:10px">
@@ -1237,7 +1255,11 @@ function renderFood(){
       <div class="log-entry" style="border-left-color:#4f72ff44">
         <div style="display:flex;justify-content:space-between;margin-bottom:2px">
           <span style="color:#8fa8ff;text-transform:capitalize">${f.meal}</span>
-          <span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal)">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}</span>
+          <span style="display:flex;gap:8px;align-items:center">
+            <span style="color:var(--cal)">${Math.round(f.calories)} cal</span>
+            ${ts(f.logged_at||f.created_at)}
+            <span onclick="deleteFood(${f.id})" style="color:var(--red);cursor:pointer;font-size:14px;padding:0 2px">🗑</span>
+          </span>
         </div>
         <div style="color:var(--muted);font-size:11px">${f.description}</div>
         <div style="color:#2a3050;font-size:10px;margin-top:2px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div>
@@ -1283,7 +1305,7 @@ function renderWorkout(){
   const hist=document.getElementById("workout-history-card");const list=document.getElementById("workout-history-list");
   if(S.allWorkoutLogs.length){
     hist.classList.remove("hidden");
-    list.innerHTML=S.allWorkoutLogs.slice(0,20).map(w=>`<div class="log-entry" style="border-left-color:#22c55e44"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="color:var(--muted);font-size:11px">${fmtDate(w.date)} ${fmtTime(w.logged_at||w.created_at)} · ${w.duration}min</span></div>${w.notes?`<div style="color:var(--muted);font-size:11px">${w.notes}</div>`:""}</div>`).join("");
+    list.innerHTML=S.allWorkoutLogs.slice(0,20).map(w=>`<div class="log-entry" style="border-left-color:#22c55e44"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--muted);font-size:11px">${fmtDate(w.date)} ${fmtTime(w.logged_at||w.created_at)} · ${w.duration}min</span><span onclick="deleteWorkout(${w.id})" style="color:var(--red);cursor:pointer;font-size:14px">🗑</span></span></div>${w.notes?`<div style="color:var(--muted);font-size:11px">${w.notes}</div>`:""}</div>`).join("");
   }
 }
 async function logWorkout(){
@@ -1319,7 +1341,7 @@ function renderHistory(){
     content.innerHTML=Object.keys(byDate).sort().reverse().slice(0,14).map(date=>`
       <div class="history-day">
         <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">${fmtFull(date)}</div>
-        ${byDate[date].map(f=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:#8fa8ff;text-transform:capitalize;font-size:12px">${f.meal}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal);font-size:12px">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}</span></div><div style="color:var(--muted);font-size:11px">${f.description}</div><div style="color:#2a3050;font-size:10px;margin-top:4px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div></div>`).join("")}
+        ${byDate[date].map(f=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:#8fa8ff;text-transform:capitalize;font-size:12px">${f.meal}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--cal);font-size:12px">${Math.round(f.calories)} cal</span>${ts(f.logged_at||f.created_at)}<span onclick="deleteFood(${f.id})" style="color:var(--red);cursor:pointer;font-size:14px">🗑</span></span></div><div style="color:var(--muted);font-size:11px">${f.description}</div><div style="color:#2a3050;font-size:10px;margin-top:4px">P:${Math.round(f.protein)}g · C:${Math.round(f.carbs)}g · F:${Math.round(f.fat)}g · Na:${Math.round(f.sodium)}mg</div></div>`).join("")}
       </div>`).join("");
   }else if(filter==="bp"){
     const byDate={};S.allBpLogs.forEach(b=>{if(!byDate[b.date])byDate[b.date]=[];byDate[b.date].push(b);});
@@ -1333,13 +1355,13 @@ function renderHistory(){
           <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em">${fmtFull(date)} · Avg</div><span style="color:${st.color};font-size:22px;font-weight:700">${avgSys}/${avgDia}</span> <span class="tag" style="background:${st.color}22;color:${st.color}">${st.label}</span></div>
           <div style="font-size:10px;color:var(--muted)">${readings.length} reading${readings.length>1?"s":""}</div>
         </div>
-        ${readings.length>1?readings.map(b=>`<div style="font-size:11px;color:var(--muted);padding:3px 0;border-top:1px solid var(--border)">${b.systolic}/${b.diastolic} · ${b.time_of_day} · ${fmtTime(b.logged_at||b.created_at)}</div>`).join(""):""}
+        ${readings.map(b=>`<div style="font-size:11px;color:var(--muted);padding:4px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><span>${b.systolic}/${b.diastolic} · ${b.time_of_day} · ${fmtTime(b.logged_at||b.created_at)}</span><span onclick="deleteBP(${b.id})" style="color:var(--red);cursor:pointer;font-size:13px">🗑</span></div>`).join("")}
       </div>`;
     }).join("");
   }else if(filter==="workout"){
-    content.innerHTML=S.allWorkoutLogs.slice(0,40).map(w=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="color:var(--green);font-weight:600">${w.duration} min</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">${fmtFull(w.date)} · ${fmtTime(w.logged_at||w.created_at)}${w.notes?` · ${w.notes}`:""}</div></div>`).join("");
+    content.innerHTML=S.allWorkoutLogs.slice(0,40).map(w=>`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#8fa8ff">${w.type}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--green);font-weight:600">${w.duration} min</span><span onclick="deleteWorkout(${w.id})" style="color:var(--red);cursor:pointer;font-size:14px">🗑</span></span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">${fmtFull(w.date)} · ${fmtTime(w.logged_at||w.created_at)}${w.notes?` · ${w.notes}`:""}</div></div>`).join("");
   }else{
-    content.innerHTML=S.weightLogs.map(w=>{const diff=+(w.weight-S.goals.target_weight).toFixed(1);return`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:24px;font-family:Georgia,serif;font-weight:700">${w.weight} lbs</span><div style="text-align:right"><div style="font-size:11px;color:var(--muted)">${fmtFull(w.date)}</div><div style="font-size:11px;color:var(--muted)">${fmtTime(w.logged_at||w.created_at)}</div><div style="font-size:11px;color:${diff>0?"var(--orange)":"var(--green)"}">${diff>0?"+":""}${diff} from goal</div></div></div></div>`;}).join("");
+    content.innerHTML=S.weightLogs.map(w=>{const diff=+(w.weight-S.goals.target_weight).toFixed(1);return`<div class="card" style="padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:24px;font-family:Georgia,serif;font-weight:700">${w.weight} lbs</span><div style="text-align:right;display:flex;gap:12px;align-items:center"><div><div style="font-size:11px;color:var(--muted)">${fmtFull(w.date)}</div><div style="font-size:11px;color:var(--muted)">${fmtTime(w.logged_at||w.created_at)}</div><div style="font-size:11px;color:${diff>0?"var(--orange)":"var(--green)"}">${diff>0?"+":""}${diff} from goal</div></div><span onclick="deleteWeight(${w.id})" style="color:var(--red);cursor:pointer;font-size:18px">🗑</span></div></div></div>`;}).join("");
   }
 }
 
@@ -1426,6 +1448,28 @@ async function saveGoals(){
   const updated={calories:+document.getElementById("g-cal").value,protein:+document.getElementById("g-protein").value,sodium:+document.getElementById("g-sodium").value,active_minutes:+document.getElementById("g-mins").value,water_goal:+document.getElementById("g-water").value,target_weight:+document.getElementById("g-weight").value};
   if(S.goals.id)await api.update("user_goals",S.goals.id,updated);
   S.goals={...S.goals,...updated};renderAll();showTab("week");
+}
+
+// ── DELETE FUNCTIONS ──────────────────────────────────────────
+async function deleteFood(id){
+  if(!confirm("Delete this food entry?"))return;
+  await api.delete("food_logs",id);
+  await loadAll();
+}
+async function deleteBP(id){
+  if(!confirm("Delete this BP reading?"))return;
+  await api.delete("bp_logs",id);
+  await loadAll();
+}
+async function deleteWorkout(id){
+  if(!confirm("Delete this workout?"))return;
+  await api.delete("workout_logs",id);
+  await loadAll();
+}
+async function deleteWeight(id){
+  if(!confirm("Delete this weight entry?"))return;
+  await api.delete("weight_logs",id);
+  await loadAll();
 }
 
 // ── INIT ──────────────────────────────────────────────────────
